@@ -232,7 +232,6 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 			/* Close the polygon. */	
 			polygon->CalcFaceNormal();
 			polygon->setColor(color);
-			polygon->makeLines();
 			mesh.addPolygon(polygon);
 	}
 	mesh.calcVNormals();

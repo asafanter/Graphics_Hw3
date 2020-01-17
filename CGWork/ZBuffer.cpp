@@ -192,7 +192,16 @@ Vec2i ZBuffer::nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p)
 
 void ZBuffer::draw(const Object &object, const Attr &attr)
 {
-	
+	Vec2i target(500, 500);
+	Vec2i start(0, 0);
+	Vec2i curr = start;
+
+	while (!(curr(0) == target(0) && curr(1) == target(1)))
+	{
+		curr = nextPixel(start, target, curr);
+		Pixel px = { curr(0), curr(1), 1.0, Vec3d(), Vec3d(), RGB(255, 0, 0) };
+		set(px);
+	}
 }
 
 ZBuffer::~ZBuffer()

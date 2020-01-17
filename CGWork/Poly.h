@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Matrices.h"
-#include "Line.h"
+#include "Types.h"
 
 class Poly 
 {
@@ -18,7 +18,6 @@ public:
 	const std::vector<std::shared_ptr<Vertex>> getVertices() const { return _vertices; }
 	std::vector<std::shared_ptr<Vertex>> &getVertices() { return _vertices; }
 	//void draw(ZBuffer &zbuffer, const Attr &attr) override;
-	Poly &makeLines();
 	Color getColor() const { return _color; }
 	Vec3d getPos() const { return _pos; }
 	Poly &setColor(const Color &new_color) { _color = new_color; return *this; }
@@ -29,13 +28,12 @@ public:
 private: //methods
 	//void drawWireFrame(ZBuffer &zbuffer, const Attr &attr);
 	//Poly &drawFaceNormals(ZBuffer &zbuffer, const Attr &attr);
-	Poly &findMinMaxYPixels();
 	//Poly &fillWithColor(ZBuffer &zbuffer, const Attr &attr);
 
 
 private: //members
 	std::vector<std::shared_ptr<Vertex>> _vertices;
-	std::vector<Line> _lines;
+	//std::vector<Line> _lines;
 	Vec3d _fnormal;
 	Vec3d _fGivenNormal;
 	Color _color;

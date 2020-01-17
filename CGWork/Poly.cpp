@@ -3,7 +3,6 @@
 
 Poly::Poly() :
 	_vertices(),
-	_lines(),
 	_fnormal(),
 	_fGivenNormal(),
 	_color(RGB(0, 0, 0)),
@@ -167,47 +166,5 @@ void Poly::CalcFaceNormal()
 //	}
 //}
 
-Poly &Poly::makeLines()
-{
-	for (uint i = 0; i < _vertices.size() - 1; i++)
-	{	
-		Line line(_vertices[i], _vertices[i + 1], _color);
 
-		_lines.push_back(line);
-	}
-
-	Line line(_vertices[0], _vertices[_vertices.size() - 1], _color);
-	_lines.push_back(line);
-
-	return *this;
-}
-
-Poly &Poly::findMinMaxYPixels()
-{
-	if (_lines.empty())
-	{
-		return *this;
-	}
-
-	int min = _lines[0].getMinYPixel();
-	int max = _lines[0].getMaxYPixel();
-
-	for (auto &line : _lines)
-	{
-		if (line.getMinYPixel() < min)
-		{
-			min = line.getMinYPixel();
-		}
-
-		if (line.getMaxYPixel() > max)
-		{
-			max = line.getMaxYPixel();
-		}
-	}
-
-	_min_y_pixel = min;
-	_max_y_pixel = max;
-
-	return *this;
-}
 
