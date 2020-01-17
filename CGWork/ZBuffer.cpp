@@ -242,7 +242,7 @@ Pixel ZBuffer::toPixel(const Vertex &vertex, const Attr &attr)
 	int x_res = static_cast<uint>((_width / 2.0) * (p(0) + 1.0));
 	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - p(1)));
 
-	return { x_res, y_res, p(2), RGB(255, 0, 0) };
+	return { x_res, y_res, p(2), vertex.color };
 }
 
 ZBuffer::~ZBuffer()

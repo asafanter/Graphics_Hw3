@@ -28,6 +28,7 @@ struct Vertex
 	Vec3d pos;
 	Vec3d given_normal;
 	Vec3d calc_normal;
+	Color color;
 	std::vector<std::shared_ptr<Poly>> neighbors_polygons;
 };
 

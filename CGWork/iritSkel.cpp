@@ -219,6 +219,7 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 	
 				std::shared_ptr<Vertex> vertex = std::make_shared<Vertex>();
 				vertex->pos = Vec3d(x, y, z);
+				vertex->color = color;
 				
 				if(IP_HAS_NORMAL_VRTX(PVertex)) 
 				{
