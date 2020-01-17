@@ -57,7 +57,7 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox)
 {
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
-		showBoundingBox, Tmatd(), NEAR_PLANE };
+		showBoundingBox, Tmatd(), NEAR_PLANE , LightMethod::FLAT, DrawingMode::SOLID};
 
 	for (auto &obj : _objs) {
 

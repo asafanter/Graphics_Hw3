@@ -33,6 +33,8 @@ public: //methods
 	void drawLine(const Pixel &p1, const Pixel &p2);
 	Pixel toPixel(const Vertex &vertex, const Attr &attr);
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
+	void drawPolygonWireFrame(const Poly &polygon, const Attr &attr);
+	void drawPolygonSolid(const Poly &polygon, const Attr &attr);
 
 private: //members
 	int *_bits;

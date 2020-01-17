@@ -49,6 +49,12 @@ enum LightMethod
 	PHONG
 };
 
+enum DrawingMode
+{
+	WIRE_FRAME,
+	SOLID
+};
+
 struct Attr
 {
 	bool face_normals;
@@ -59,4 +65,5 @@ struct Attr
 	Tmatd T;
 	double near_plane;
 	LightMethod light_method;
+	DrawingMode drawing_mode;
 };

@@ -223,32 +223,63 @@ Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 	return res;
 }
 
+void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
+{
+	auto &vertices = polygon.getVertices();
+	Pixel first_pixel = {};
+	Pixel last_pixel = {};
+
+	for (int i = 0; i < vertices.size() - 1; i++)
+	{
+		auto px1 = toPixel(*vertices[i], attr);
+		auto px2 = toPixel(*vertices[i + 1], attr);
+		drawLine(px1, px2);
+
+		if (i == 0)
+		{
+			first_pixel = px1;
+		}
+		if (i == vertices.size() - 2)
+		{
+			last_pixel = px2;
+		}
+	}
+	drawLine(first_pixel, last_pixel);
+}
+
+void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
+{
+	auto &vertices = polygon.getVertices();
+	
+	auto start = toPixel(*vertices[0], attr);
+	auto target1 = toPixel(*vertices[1], attr);
+	auto target2 = toPixel(*vertices[2], attr);
+	auto curr1 = start;
+	auto curr2 = start;
+
+	while(!(curr1.x == target1.x && curr1.y == target1.y) &&
+		!(curr2.x == target2.x && curr2.y == target2.y))
+	{
+		curr1 = nextPixel(start, target1, curr1);
+		curr2 = nextPixel(start, target2, curr2);
+		drawLine(curr1, curr2);
+	}
+}
+
 void ZBuffer::draw(const Object &object, const Attr &attr)
 {
 	for (auto &mesh : object.getMeshes())
 	{
 		for (auto &polygon : mesh.getPolygons())
 		{
-			auto &vertices = polygon->getVertices();
-			Pixel first_pixel = {};
-			Pixel last_pixel = {};
-
-			for (int i = 0; i < vertices.size() - 1; i++)
+			if (attr.drawing_mode == DrawingMode::WIRE_FRAME)
 			{
-				auto px1 = toPixel(*vertices[i], attr);
-				auto px2 = toPixel(*vertices[i + 1], attr);
-				drawLine(px1, px2);
-
-				if (i == 0)
-				{
-					first_pixel = px1;
-				}
-				if (i == vertices.size() - 2)
-				{
-					last_pixel = px2;
-				}
+				drawPolygonWireFrame(*polygon, attr);
 			}
-			drawLine(first_pixel, last_pixel);
+			else
+			{
+				drawPolygonSolid(*polygon, attr);
+			}
 		}
 	}
 }
