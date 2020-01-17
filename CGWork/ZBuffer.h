@@ -27,12 +27,12 @@ private: //defs
 	static constexpr uint MAX_LIGHTS = 7;
 
 public: //methods
-	static Color RGBToBGR(COLORREF col);
-	static Pixel nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
-	static int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
+	Color RGBToBGR(COLORREF col);
+	Pixel nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
+	int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
 	void drawLine(const Pixel &p1, const Pixel &p2);
 	Pixel toPixel(const Vertex &vertex, const Attr &attr);
-	static Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
+	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 
 private: //members
 	int *_bits;

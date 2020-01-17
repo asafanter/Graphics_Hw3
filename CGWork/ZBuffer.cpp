@@ -150,7 +150,24 @@ int ZBuffer::calcQuarter(const Pixel &p2, const Pixel &p, const double &m)
 
 Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 {
-	return { p.x, p.y, p.depth, p.color };
+	double line_dist = std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
+	double dist_from_begin = std::sqrt(std::pow(p.x - p1.x, 2) + std::pow(p.y - p1.y, 2));
+
+	if (p.x == p1.x && p.y == p1.y)
+	{
+		return p1;
+	}
+
+	if (p.x == p2.x && p.y == p2.y)
+	{
+		return p2;
+	}
+
+	double a = dist_from_begin / line_dist;
+
+	auto depth = a * p2.depth + (1 - a) * p1.depth;
+
+	return { p.x, p.y, depth, p.color };
 }
 
 Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
