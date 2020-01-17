@@ -26,8 +26,10 @@ public:
 private: //defs
 	static constexpr uint MAX_LIGHTS = 7;
 
-private: //methods
+public: //methods
 	static Color RGBToBGR(COLORREF col);
+	static Vec2i nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p);
+	static int calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m);
 
 private: //members
 	int *_bits;

@@ -94,9 +94,105 @@ ZBuffer &ZBuffer::setDefaultColor(const Color &color)
 	return *this;
 }
 
+int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
+{
+	if (std::abs(m) < 1.0)
+	{
+		if (m > 0)
+		{
+			if (p(0) <= p2(0))
+			{
+				return 1;
+			}
+			else
+			{
+				return 7;
+			}
+		}
+		else
+		{
+			if (p(0) <= p2(0))
+			{
+				return 3;
+			}
+			else
+			{
+				return 5;
+			}
+		}
+	}
+	else
+	{
+		if (m > 0)
+		{
+			if (p(0) <= p2(0))
+			{
+				return 2;
+			}
+			else
+			{
+				return 8;
+			}
+		}
+		else
+		{
+			if (p(0) <= p2(0))
+			{
+				return 4;
+			}
+			else
+			{
+				return 6;
+			}
+		}
+	}
+}
+
+Vec2i ZBuffer::nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p)
+{
+	int dy = p2(1) - p1(1);
+	int dx = p2(0) - p1(0);
+	int x = 1;
+	int y = -1;
+
+	if (p2(1) == p(1) && p2(0) > p(0))
+	{
+		return Vec2i(p(0) + 1, p(1));
+	}
+	if (p2(1) == p(1) && p2(0) < p(0))
+	{
+		return Vec2i(p(0) - 1, p(1));
+	}
+	if (p2(0) == p(0) && p2(1) > p(1))
+	{
+		return Vec2i(p(0), p(1) + 1);
+	}
+	if (p2(0) == p(0) && p2(1) < p(1))
+	{
+		return Vec2i(p(0), p(1) - 1);
+	}
+
+	double m = static_cast<double>(dy) / static_cast<double>(dx);
+
+	int quarter = calcQuarter(p2, p, m);
+
+	if (quarter == 1 || quarter == 3 || quarter == 5 || quarter == 7)
+	{
+		x = quarter < 4 ? p(0) + 1 : p(0) - 1;
+		y = m * (x - p1(0)) + p1(1);
+	}
+	else
+	{
+		y = quarter == 2 || quarter == 6 ? p(1) + 1 : p(1) - 1;
+		x = (1 / m) * (y + m * p1(0) - p1(1));
+	}
+
+	return Vec2i(x, y);
+}
+
 void ZBuffer::draw(const Object &object, const Attr &attr)
 {
-
+	
 }
 
 ZBuffer::~ZBuffer()

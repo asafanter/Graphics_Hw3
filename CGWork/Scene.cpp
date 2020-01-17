@@ -63,7 +63,7 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 
 		attr.T = _projection * _look_at * _view * obj.getModel();
 
-		//obj.draw(zbuffer, attr);	
+		zbuffer.draw(obj, attr);	
 	}
 
 	if (!_is_initialized)
