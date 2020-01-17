@@ -28,10 +28,11 @@ private: //defs
 
 public: //methods
 	static Color RGBToBGR(COLORREF col);
-	static Vec2i nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p);
-	static int calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m);
+	static Pixel nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
+	static int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
 	void drawLine(const Pixel &p1, const Pixel &p2);
 	Pixel toPixel(const Vertex &vertex, const Attr &attr);
+	static Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 
 private: //members
 	int *_bits;

@@ -94,13 +94,13 @@ ZBuffer &ZBuffer::setDefaultColor(const Color &color)
 	return *this;
 }
 
-int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
+int ZBuffer::calcQuarter(const Pixel &p2, const Pixel &p, const double &m)
 {
 	if (std::abs(m) < 1.0)
 	{
 		if (m > 0)
 		{
-			if (p(0) <= p2(0))
+			if (p.x <= p2.x)
 			{
 				return 1;
 			}
@@ -111,7 +111,7 @@ int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
 		}
 		else
 		{
-			if (p(0) <= p2(0))
+			if (p.x <= p2.x)
 			{
 				return 3;
 			}
@@ -125,7 +125,7 @@ int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
 	{
 		if (m > 0)
 		{
-			if (p(0) <= p2(0))
+			if (p.x <= p2.x)
 			{
 				return 2;
 			}
@@ -136,7 +136,7 @@ int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
 		}
 		else
 		{
-			if (p(0) <= p2(0))
+			if (p.x <= p2.x)
 			{
 				return 4;
 			}
@@ -148,28 +148,42 @@ int ZBuffer::calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m)
 	}
 }
 
-Vec2i ZBuffer::nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p)
+Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 {
-	int dy = p2(1) - p1(1);
-	int dx = p2(0) - p1(0);
+	return { p.x, p.y, p.depth, p.color };
+}
+
+Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
+{
+	int dy = p2.y - p1.y;
+	int dx = p2.x - p1.x;
 	int x = 1;
 	int y = -1;
+	Pixel res = interpolatePixel(p1, p2, p);
 
-	if (p2(1) == p(1) && p2(0) > p(0))
+	if (p2.y == p.y && p2.x > p.x)
 	{
-		return Vec2i(p(0) + 1, p(1));
+		res.x = p.x + 1;
+		res.y = p.y;
+		return res;
 	}
-	if (p2(1) == p(1) && p2(0) < p(0))
+	if (p2.y == p.y && p2.x < p.x)
 	{
-		return Vec2i(p(0) - 1, p(1));
+		res.x = p.x - 1;
+		res.y = p.y;
+		return res;
 	}
-	if (p2(0) == p(0) && p2(1) > p(1))
+	if (p2.x == p.x && p2.y > p.y)
 	{
-		return Vec2i(p(0), p(1) + 1);
+		res.x = p.x;
+		res.y = p.y + 1;
+		return res;
 	}
-	if (p2(0) == p(0) && p2(1) < p(1))
+	if (p2.x == p.x && p2.y < p.y)
 	{
-		return Vec2i(p(0), p(1) - 1);
+		res.x = p.x;
+		res.y = p.y - 1;
+		return res;
 	}
 
 	double m = static_cast<double>(dy) / static_cast<double>(dx);
@@ -178,16 +192,18 @@ Vec2i ZBuffer::nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p)
 
 	if (quarter == 1 || quarter == 3 || quarter == 5 || quarter == 7)
 	{
-		x = quarter < 4 ? p(0) + 1 : p(0) - 1;
-		y = m * (x - p1(0)) + p1(1);
+		x = quarter < 4 ? p.x + 1 : p.x - 1;
+		y = m * (x - p1.x) + p1.y;
 	}
 	else
 	{
-		y = quarter == 2 || quarter == 6 ? p(1) + 1 : p(1) - 1;
-		x = (1 / m) * (y + m * p1(0) - p1(1));
+		y = quarter == 2 || quarter == 6 ? p.y + 1 : p.y - 1;
+		x = (1 / m) * (y + m * p1.x - p1.y);
 	}
 
-	return Vec2i(x, y);
+	res.x = x;
+	res.y = y;
+	return res;
 }
 
 void ZBuffer::draw(const Object &object, const Attr &attr)
@@ -222,15 +238,12 @@ void ZBuffer::draw(const Object &object, const Attr &attr)
 
 void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
 {
-	Vec2i target(p2.x, p2.y);
-	Vec2i start(p1.x, p1.y);
-	Vec2i curr = start;
+	Pixel curr = p1;
 
-	while (!(curr(0) == target(0) && curr(1) == target(1)))
+	while (!(curr.x == p2.x && curr.y == p2.y))
 	{
-		curr = nextPixel(start, target, curr);
-		Pixel px = { curr(0), curr(1), 1.0, p1.color };
-		set(px);
+		curr = nextPixel(p1, p2, curr);
+		set(curr);
 	}
 }
 
