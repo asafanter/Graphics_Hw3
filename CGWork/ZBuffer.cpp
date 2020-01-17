@@ -250,18 +250,26 @@ void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
 void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 {
 	auto &vertices = polygon.getVertices();
-	
+
 	auto start = toPixel(*vertices[0], attr);
 	auto target1 = toPixel(*vertices[1], attr);
 	auto target2 = toPixel(*vertices[2], attr);
+
 	auto curr1 = start;
 	auto curr2 = start;
 
-	while(!(curr1.x == target1.x && curr1.y == target1.y) &&
-		!(curr2.x == target2.x && curr2.y == target2.y))
+	drawLine(curr1, curr2);
+
+	while (curr1 != target1 || curr2 != target2)
 	{
-		curr1 = nextPixel(start, target1, curr1);
-		curr2 = nextPixel(start, target2, curr2);
+		if (curr1 != target1)
+		{
+			curr1 = nextPixel(start, target1, curr1);
+		}
+		if (curr2 != target2)
+		{
+			curr2 = nextPixel(start, target2, curr2);
+		}
 		drawLine(curr1, curr2);
 	}
 }
@@ -287,8 +295,9 @@ void ZBuffer::draw(const Object &object, const Attr &attr)
 void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
 {
 	Pixel curr = p1;
+	set(curr);
 
-	while (!(curr.x == p2.x && curr.y == p2.y))
+	while (curr != p2)
 	{
 		curr = nextPixel(p1, p2, curr);
 		set(curr);

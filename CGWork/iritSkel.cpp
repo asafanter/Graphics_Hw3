@@ -230,10 +230,15 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 				PVertex = PVertex -> Pnext;	
 			}
 			while (PVertex != PPolygon -> PVertex && PVertex != NULL);
-			/* Close the polygon. */	
-			polygon->CalcFaceNormal();
-			polygon->setColor(color);
-			mesh.addPolygon(polygon);
+			/* Close the polygon. */
+			auto polygons = Poly::createPolygons3Vertices(*polygon);
+
+			for (auto &p : polygons)
+			{
+				p->CalcFaceNormal();
+				p->setColor(color);
+				mesh.addPolygon(p);
+			}
 	}
 	mesh.calcVNormals();
 	/* Close the object. */

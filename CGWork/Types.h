@@ -17,10 +17,14 @@ struct Pixel
 	//Vec3d pos;
 	Color color;
 
-	//bool operator==(const Pixel &p)
-	//{
-	//	return x == p.x && y == p.y && depth == p.depth && color == p.color;
-	//}
+	bool operator==(const Pixel &p)
+	{
+		return x == p.x && y == p.y;
+	}
+	bool operator!=(const Pixel &p)
+	{
+		return !(*this == p);
+	}
 };
 
 struct Vertex

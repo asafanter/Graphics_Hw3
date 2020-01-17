@@ -71,6 +71,37 @@ void Poly::CalcFaceNormal()
 	_fnormal = res;
 }
 
+std::vector<std::shared_ptr<Poly>> Poly::createPolygons3Vertices(const Poly &polygon)
+{
+	std::vector<std::shared_ptr<Poly>> res;
+
+	auto &vertices = polygon.getVertices();
+
+	if (vertices.size() == 3)
+	{
+		auto p = std::make_shared<Poly>(polygon);
+		res.push_back(p);
+	}
+	else
+	{
+		auto polygon1 = std::make_shared<Poly>();
+		auto polygon2 = std::make_shared<Poly>();
+
+		polygon1->addVertex(vertices[0]);
+		polygon1->addVertex(vertices[1]);
+		polygon1->addVertex(vertices[2]);
+
+		polygon2->addVertex(vertices[2]);
+		polygon2->addVertex(vertices[3]);
+		polygon2->addVertex(vertices[0]);
+
+		res.push_back(polygon1);
+		res.push_back(polygon2);
+	}
+
+	return res;
+}
+
 //Poly &Poly::fillWithColor(ZBuffer &zbuffer, const Attr &attr)
 //{
 //	std::vector<Pixel> pixels;

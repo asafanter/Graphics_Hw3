@@ -9,6 +9,7 @@ class Poly
 {
 public:
 	Poly();
+	static std::vector<std::shared_ptr<Poly>> createPolygons3Vertices(const Poly &polygon);
 	Poly &addVertex(const std::shared_ptr<Vertex> &vertex);
 	void SetGivenFaceNormal(double x, double y, double z);
 	void CalcFaceNormal();
