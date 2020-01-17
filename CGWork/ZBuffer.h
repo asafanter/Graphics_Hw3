@@ -30,6 +30,8 @@ public: //methods
 	static Color RGBToBGR(COLORREF col);
 	static Vec2i nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p);
 	static int calcQuarter(const Vec2i &p2, const Vec2i &p, const double &m);
+	void drawLine(const Pixel &p1, const Pixel &p2);
+	Pixel toPixel(const Vertex &vertex, const Attr &attr);
 
 private: //members
 	int *_bits;

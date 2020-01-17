@@ -192,16 +192,57 @@ Vec2i ZBuffer::nextPixel(const Vec2i &p1, const Vec2i &p2, const Vec2i &p)
 
 void ZBuffer::draw(const Object &object, const Attr &attr)
 {
-	Vec2i target(500, 500);
-	Vec2i start(0, 0);
+	for (auto &mesh : object.getMeshes())
+	{
+		for (auto &polygon : mesh.getPolygons())
+		{
+			auto &vertices = polygon->getVertices();
+			Pixel first_pixel = {};
+			Pixel last_pixel = {};
+
+			for (int i = 0; i < vertices.size() - 1; i++)
+			{
+				auto px1 = toPixel(*vertices[i], attr);
+				auto px2 = toPixel(*vertices[i + 1], attr);
+				drawLine(px1, px2);
+
+				if (i == 0)
+				{
+					first_pixel = px1;
+				}
+				if (i == vertices.size() - 2)
+				{
+					last_pixel = px2;
+				}
+			}
+			drawLine(first_pixel, last_pixel);
+		}
+	}
+}
+
+void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
+{
+	Vec2i target(p2.x, p2.y);
+	Vec2i start(p1.x, p1.y);
 	Vec2i curr = start;
 
 	while (!(curr(0) == target(0) && curr(1) == target(1)))
 	{
 		curr = nextPixel(start, target, curr);
-		Pixel px = { curr(0), curr(1), 1.0, Vec3d(), Vec3d(), RGB(255, 0, 0) };
+		Pixel px = { curr(0), curr(1), 1.0, p1.color };
 		set(px);
 	}
+}
+
+Pixel ZBuffer::toPixel(const Vertex &vertex, const Attr &attr)
+{
+	auto p = attr.T * vertex.pos.toHomogeneous();
+	p /= p(3);
+
+	int x_res = static_cast<uint>((_width / 2.0) * (p(0) + 1.0));
+	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - p(1)));
+
+	return { x_res, y_res, p(2), RGB(255, 0, 0) };
 }
 
 ZBuffer::~ZBuffer()

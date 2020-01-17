@@ -13,14 +13,14 @@ struct Pixel
 	int x;
 	int y;
 	double depth;
-	Vec3d normal;
-	Vec3d pos;
+	//Vec3d normal;
+	//Vec3d pos;
 	Color color;
 
-	bool operator==(const Pixel &p)
-	{
-		return x == p.x && y == p.y && depth == p.depth && color == p.color;
-	}
+	//bool operator==(const Pixel &p)
+	//{
+	//	return x == p.x && y == p.y && depth == p.depth && color == p.color;
+	//}
 };
 
 struct Vertex

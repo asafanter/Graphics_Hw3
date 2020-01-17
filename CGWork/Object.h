@@ -8,7 +8,8 @@ public:
 	Object(CString str);
 	~Object() = default;
 	void addMesh(const Mesh& mesh);
-	std::vector<Mesh>& getMeshs()  { return _meshes; }
+	const std::vector<Mesh>& getMeshes() const { return _meshes; }
+	std::vector<Mesh>& getMeshes() { return _meshes; }
 	Object &rotateX(const double angle_deg);
 	Object &rotateY(const double angle_deg);
 	Object &rotateZ(const double angle_deg);

@@ -77,11 +77,11 @@ Scene & Scene::setWireFrameColor(const COLORREF & color, int Id)
 {
 	if (Id == -1)
 		for (auto& ob : _objs)
-			for(auto& mesh : ob.getMeshs())
+			for(auto& mesh : ob.getMeshes())
 				mesh.setColor(color);
 	else
 		if (Id < _objs.size())
-			for (auto& mesh : _objs[Id].getMeshs())
+			for (auto& mesh : _objs[Id].getMeshes())
 				mesh.setColor(color);
 
 	return *this;
