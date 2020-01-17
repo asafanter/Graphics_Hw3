@@ -212,42 +212,42 @@ Mesh &Mesh::scale(const Vec3d &scale)
 	return *this;
 }
 
-void Mesh::draw(ZBuffer &zbuffer, const Attr &attr)
-{
-	for (auto &polygon : _polygons)
-	{
-		polygon->setColor(_color);
-		polygon->draw(zbuffer, attr);
-	}
+//void Mesh::draw(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	for (auto &polygon : _polygons)
+//	{
+//		polygon->setColor(_color);
+//		polygon->draw(zbuffer, attr);
+//	}
+//
+//	if (attr.vertices_normals)
+//	{
+//		drawVerticesNormals(zbuffer, attr);
+//	}
+//}
 
-	if (attr.vertices_normals)
-	{
-		drawVerticesNormals(zbuffer, attr);
-	}
-}
-
-Mesh &Mesh::drawVerticesNormals(ZBuffer &zbuffer, const Attr &attr)
-{
-	auto &T = attr.T;
-	int width = zbuffer.getWidth();
-	int height = zbuffer.getHeight();
-	int *bits = zbuffer.getBits();
-	Vertex p1 = {};
-	Vertex p2 = {};
-
-	for (auto &vertex : _vertices) {
-		p1.pos = vertex->pos;
-		Vec3d normal = attr.given_vertices_normals ? vertex->given_normal : vertex->calc_normal;
-			
-		p2.pos = p1.pos + normal;
-
-		auto px1 = Drawable::toPixels(zbuffer, attr, p1, _vertices_normals_color);
-		auto px2 = Drawable::toPixels(zbuffer, attr, p2, _vertices_normals_color);
-
-		MidPointDraw(px1.x, px1.y, px2.x, px2.y, bits, RGBToBGR(_vertices_normals_color),
-			width, height);
-	}
-
-	return *this;
-}
+//Mesh &Mesh::drawVerticesNormals(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	auto &T = attr.T;
+//	int width = zbuffer.getWidth();
+//	int height = zbuffer.getHeight();
+//	int *bits = zbuffer.getBits();
+//	Vertex p1 = {};
+//	Vertex p2 = {};
+//
+//	for (auto &vertex : _vertices) {
+//		p1.pos = vertex->pos;
+//		Vec3d normal = attr.given_vertices_normals ? vertex->given_normal : vertex->calc_normal;
+//			
+//		p2.pos = p1.pos + normal;
+//
+//		auto px1 = Drawable::toPixels(zbuffer, attr, p1, _vertices_normals_color);
+//		auto px2 = Drawable::toPixels(zbuffer, attr, p2, _vertices_normals_color);
+//
+//		MidPointDraw(px1.x, px1.y, px2.x, px2.y, bits, RGBToBGR(_vertices_normals_color),
+//			width, height);
+//	}
+//
+//	return *this;
+//}
 

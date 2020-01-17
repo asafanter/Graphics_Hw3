@@ -3,12 +3,9 @@
 #include <vector>
 
 #include "Matrices.h"
-#include "Draw.h"
-#include "Drawable.h"
 #include "Line.h"
 
-class Mesh;
-class Poly : public Drawable
+class Poly 
 {
 public:
 	Poly();
@@ -20,7 +17,7 @@ public:
 	const BoundingBox &getBoundingBox() const { return _bounding_box; }
 	const std::vector<std::shared_ptr<Vertex>> getVertices() const { return _vertices; }
 	std::vector<std::shared_ptr<Vertex>> &getVertices() { return _vertices; }
-	void draw(ZBuffer &zbuffer, const Attr &attr) override;
+	//void draw(ZBuffer &zbuffer, const Attr &attr) override;
 	Poly &makeLines();
 	Color getColor() const { return _color; }
 	Vec3d getPos() const { return _pos; }
@@ -30,10 +27,10 @@ public:
 	friend class Mesh;
 
 private: //methods
-	void drawWireFrame(ZBuffer &zbuffer, const Attr &attr);
-	Poly &drawFaceNormals(ZBuffer &zbuffer, const Attr &attr);
+	//void drawWireFrame(ZBuffer &zbuffer, const Attr &attr);
+	//Poly &drawFaceNormals(ZBuffer &zbuffer, const Attr &attr);
 	Poly &findMinMaxYPixels();
-	Poly &fillWithColor(ZBuffer &zbuffer, const Attr &attr);
+	//Poly &fillWithColor(ZBuffer &zbuffer, const Attr &attr);
 
 
 private: //members

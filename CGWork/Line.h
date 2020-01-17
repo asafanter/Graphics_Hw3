@@ -1,15 +1,14 @@
 #pragma once
 
 #include "afxwin.h"
-#include "Drawable.h"
-#include "ZBuffer.h"
+#include "Types.h"
 
-class Line : public Drawable
+class Line
 {
 public:
 	Line(const std::shared_ptr<Vertex> &from, const std::shared_ptr<Vertex> &to, const COLORREF &color);
-	virtual void draw(ZBuffer &zbuffer, const Attr &attr) override;
-	static void midPoint(ZBuffer &zbuffer, const Attr &attr, const Pixel &from, const Pixel &to, const Color &color);
+	//virtual void draw(ZBuffer &zbuffer, const Attr &attr) override;
+	//static void midPoint(ZBuffer &zbuffer, const Attr &attr, const Pixel &from, const Pixel &to, const Color &color);
 	static double interpolateDepth(const int &x, const int &y, const Pixel &from, const Pixel &to);
 	static Vec3d interpolateNormal(const int &x, const int &y, const Pixel &from, const Pixel &to);
 	static Vec3d interpolatePos(const int &x, const int &y, const Pixel &from, const Pixel &to);

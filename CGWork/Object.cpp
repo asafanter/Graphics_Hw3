@@ -135,30 +135,30 @@ std::vector<std::pair<Vec4d, Vec4d>> Object::getBoundingBoxLines()
 	return container;
 }
 
-Object &Object::drawBoudingBox(ZBuffer &zbuffer, const Attr &attr)
-{
-	auto T = attr.T;
-	int width = zbuffer.getWidth();
-	int height = zbuffer.getHeight();
-	int *bits = zbuffer.getBits();
-
-	auto bb_lines = getBoundingBoxLines();
-	for (auto pair : bb_lines) {
-		Vec4d p1 = T * pair.first;
-		Vec4d p2;
-
-		p2 = T * pair.second;
-		p1 /= p1(3);
-		p2 /= p2(3);
-		auto px1 = coordsToPixels(p1(0), p1(1), width, height);
-		auto px2 = coordsToPixels(p2(0), p2(1), width, height);
-
-		MidPointDraw(px1(0), px1(1), px2(0), px2(1), bits, RGBToBGR(_BBColor),
-			width, height);
-	}
-
-	return *this;
-}
+//Object &Object::drawBoudingBox(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	auto T = attr.T;
+//	int width = zbuffer.getWidth();
+//	int height = zbuffer.getHeight();
+//	int *bits = zbuffer.getBits();
+//
+//	auto bb_lines = getBoundingBoxLines();
+//	for (auto pair : bb_lines) {
+//		Vec4d p1 = T * pair.first;
+//		Vec4d p2;
+//
+//		p2 = T * pair.second;
+//		p1 /= p1(3);
+//		p2 /= p2(3);
+//		auto px1 = coordsToPixels(p1(0), p1(1), width, height);
+//		auto px2 = coordsToPixels(p2(0), p2(1), width, height);
+//
+//		MidPointDraw(px1(0), px1(1), px2(0), px2(1), bits, RGBToBGR(_BBColor),
+//			width, height);
+//	}
+//
+//	return *this;
+//}
 
 Object& Object::setVNColor(const COLORREF &color)
 {
@@ -182,16 +182,16 @@ Object& Object::setFNColor(const COLORREF &color)
 	return *this;
 }
 
-void Object::draw(ZBuffer &zbuffer, const Attr &attr)
-{
-	for (auto &mesh : _meshes)
-	{
-		mesh.draw(zbuffer, attr);
-	}
-
-	if (attr.bounding_box) 
-	{
-		drawBoudingBox(zbuffer, attr);
-	}
-}
+//void Object::draw(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	for (auto &mesh : _meshes)
+//	{
+//		mesh.draw(zbuffer, attr);
+//	}
+//
+//	if (attr.bounding_box) 
+//	{
+//		drawBoudingBox(zbuffer, attr);
+//	}
+//}
 

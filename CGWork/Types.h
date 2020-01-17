@@ -1,7 +1,8 @@
 #pragma once
 
+#include <afxwin.h>
+
 #include "Matrices.h"
-#include "afxwin.h"
 
 using Color = COLORREF;
 
@@ -40,3 +41,21 @@ struct BoundingBox
 	double max_z;
 };
 
+enum LightMethod
+{
+	FLAT,
+	GOURAUD,
+	PHONG
+};
+
+struct Attr
+{
+	bool face_normals;
+	bool vertices_normals;
+	bool given_face_normals;
+	bool given_vertices_normals;
+	bool bounding_box;
+	Tmatd T;
+	double near_plane;
+	LightMethod light_method;
+};

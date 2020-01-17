@@ -2,11 +2,9 @@
 
 #include <afxwin.h>
 
-#include "Draw.h"
 #include "Poly.h"
-#include "Drawable.h"
 
-class Mesh : public Drawable
+class Mesh
 {
 public:
 	Mesh(COLORREF col, char* str);
@@ -27,12 +25,12 @@ public:
 	Vec4d getPos() { return Vec4d(_pos(0), _pos(1), _pos(2), 1.0); }
 	std::vector<std::pair<Vec4d, Vec4d>> getBoundingBoxLines();
 	CString getName() { return _name; }
-	void draw(ZBuffer &zbuffer, const Attr &attr) override;
+	//void draw(ZBuffer &zbuffer, const Attr &attr) override;
 	~Mesh() = default;
 	friend class Object;
 
 private: //methods
-	Mesh &drawVerticesNormals(ZBuffer &zbuffer, const Attr &attr);
+	//Mesh &drawVerticesNormals(ZBuffer &zbuffer, const Attr &attr);
 	std::shared_ptr<Vertex> findVertex(const std::shared_ptr<Vertex> &vertex);
 
 private: //members

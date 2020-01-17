@@ -94,6 +94,11 @@ ZBuffer &ZBuffer::setDefaultColor(const Color &color)
 	return *this;
 }
 
+void ZBuffer::draw(const Object &object, const Attr &attr)
+{
+
+}
+
 ZBuffer::~ZBuffer()
 {
 	if (!isEmpty())

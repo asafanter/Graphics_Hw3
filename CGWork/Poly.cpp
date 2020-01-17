@@ -72,100 +72,100 @@ void Poly::CalcFaceNormal()
 	_fnormal = res;
 }
 
-Poly &Poly::fillWithColor(ZBuffer &zbuffer, const Attr &attr)
-{
-	std::vector<Pixel> pixels;
-	for (int i = _min_y_pixel; i <= _max_y_pixel; i++)
-	{
-		pixels.clear();
+//Poly &Poly::fillWithColor(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	std::vector<Pixel> pixels;
+//	for (int i = _min_y_pixel; i <= _max_y_pixel; i++)
+//	{
+//		pixels.clear();
+//
+//		for (auto &line : _lines)
+//		{
+//			if (i <= line._max_y_px && i >= line._min_y_px)
+//			{
+//				auto p1 = line._from_px;
+//				auto p2 = line._to_px;
+//
+//				auto dy = p2.y - p1.y;
+//				auto dx = p2.x - p1.x;
+//
+//				if (dy == 0)
+//				{
+//					continue;
+//				}
+//
+//				int x = (i - p2.y) * dx / dy + p2.x;
+//				int y = i;
+//				auto depth = Line::interpolateDepth(x, y, p1, p2);
+//				auto normal = Line::interpolateNormal(x, y, p1, p2);
+//				auto pos = Line::interpolatePos(x, y, p1, p2);
+//
+//				Pixel pixel = { x, y, depth, normal, pos, _color};
+//
+//				auto it = std::find(pixels.begin(), pixels.end(), pixel);
+//
+//				if (it == pixels.end())
+//				{
+//					pixels.push_back(pixel);
+//				}
+//			}
+//		}
+//		if (pixels.size() == 2)
+//		{
+//			Line::midPoint(zbuffer, attr, pixels[0], pixels[1], _color);
+//		}
+//	}
+//
+//	return *this;
+//}
 
-		for (auto &line : _lines)
-		{
-			if (i <= line._max_y_px && i >= line._min_y_px)
-			{
-				auto p1 = line._from_px;
-				auto p2 = line._to_px;
+//void Poly::draw(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	drawWireFrame(zbuffer, attr);
+//	findMinMaxYPixels();
+//
+//	//fillWithColor(zbuffer, attr);
+//
+//	if (attr.face_normals)
+//	{
+//		drawFaceNormals(zbuffer, attr);
+//	}
+//}
 
-				auto dy = p2.y - p1.y;
-				auto dx = p2.x - p1.x;
+//Poly &Poly::drawFaceNormals(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	auto &T = attr.T;
+//	int width = zbuffer.getWidth();
+//	int height = zbuffer.getHeight();
+//	int *bits = zbuffer.getBits();
+//	Vertex p1 = {};
+//	Vertex p2 = {};
+//
+//	p1.pos = _pos;
+//	Vec3d normal;
+//	if (attr.given_face_normals && getGivenFaceNormal()(3) == 1)
+//		normal = getGivenFaceNormal();
+//	else
+//		normal = getCalcFaceNormal();
+//
+//	p2.pos = p1.pos + normal;
+//
+//	auto px1 = Drawable::toPixels(zbuffer, attr, p1, _faces_normals_color);
+//	auto px2 = Drawable::toPixels(zbuffer, attr, p2, _faces_normals_color);
+//
+//	MidPointDraw(px1.x, px1.y, px2.x, px2.y, bits, RGBToBGR(_faces_normals_color),
+//		width, height);
+//
+//	return *this;
+//}
 
-				if (dy == 0)
-				{
-					continue;
-				}
-
-				int x = (i - p2.y) * dx / dy + p2.x;
-				int y = i;
-				auto depth = Line::interpolateDepth(x, y, p1, p2);
-				auto normal = Line::interpolateNormal(x, y, p1, p2);
-				auto pos = Line::interpolatePos(x, y, p1, p2);
-
-				Pixel pixel = { x, y, depth, normal, pos, _color};
-
-				auto it = std::find(pixels.begin(), pixels.end(), pixel);
-
-				if (it == pixels.end())
-				{
-					pixels.push_back(pixel);
-				}
-			}
-		}
-		if (pixels.size() == 2)
-		{
-			Line::midPoint(zbuffer, attr, pixels[0], pixels[1], _color);
-		}
-	}
-
-	return *this;
-}
-
-void Poly::draw(ZBuffer &zbuffer, const Attr &attr)
-{
-	drawWireFrame(zbuffer, attr);
-	findMinMaxYPixels();
-
-	//fillWithColor(zbuffer, attr);
-
-	if (attr.face_normals)
-	{
-		drawFaceNormals(zbuffer, attr);
-	}
-}
-
-Poly &Poly::drawFaceNormals(ZBuffer &zbuffer, const Attr &attr)
-{
-	auto &T = attr.T;
-	int width = zbuffer.getWidth();
-	int height = zbuffer.getHeight();
-	int *bits = zbuffer.getBits();
-	Vertex p1 = {};
-	Vertex p2 = {};
-
-	p1.pos = _pos;
-	Vec3d normal;
-	if (attr.given_face_normals && getGivenFaceNormal()(3) == 1)
-		normal = getGivenFaceNormal();
-	else
-		normal = getCalcFaceNormal();
-
-	p2.pos = p1.pos + normal;
-
-	auto px1 = Drawable::toPixels(zbuffer, attr, p1, _faces_normals_color);
-	auto px2 = Drawable::toPixels(zbuffer, attr, p2, _faces_normals_color);
-
-	MidPointDraw(px1.x, px1.y, px2.x, px2.y, bits, RGBToBGR(_faces_normals_color),
-		width, height);
-
-	return *this;
-}
-
-void Poly::drawWireFrame(ZBuffer &zbuffer, const Attr &attr)
-{
-	for (auto &line : _lines)
-	{
-		line.draw(zbuffer, attr);
-	}
-}
+//void Poly::drawWireFrame(ZBuffer &zbuffer, const Attr &attr)
+//{
+//	for (auto &line : _lines)
+//	{
+//		line.draw(zbuffer, attr);
+//	}
+//}
 
 Poly &Poly::makeLines()
 {

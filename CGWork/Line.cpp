@@ -17,33 +17,33 @@ Line::Line(const std::shared_ptr<Vertex> &from, const std::shared_ptr<Vertex> &t
 
 }
 
-void Line::draw(ZBuffer &zbuffer, const Attr &attr) 
-{
-	auto from = Drawable::toPixels(zbuffer, attr, *_from, _color);
-	auto to = Drawable::toPixels(zbuffer, attr, *_to, _color);
-
-	if (!_is_init_pixels)
-	{
-		_from_px = from;
-		_to_px = to;
-		_is_init_pixels = true;
-	}
-
-	_min_y_px = min(from.y, to.y);
-	_max_y_px = max(from.y, to.y);
-
-	if ((from.x < 0 && to.x < 0) || 
-		(from.y < 0 && to.y < 0) ||
-		(from.x >= zbuffer.getWidth() && to.x >= zbuffer.getWidth()) ||
-		(from.y >= zbuffer.getHeight() && to.y >= zbuffer.getHeight()))
-	{
-		return;
-	}
-
-	boundPixels(from, to, zbuffer.getWidth(), zbuffer.getHeight());
-
-	midPoint(zbuffer, attr, from, to, _color);
-}
+//void Line::draw(ZBuffer &zbuffer, const Attr &attr) 
+//{
+//	auto from = Drawable::toPixels(zbuffer, attr, *_from, _color);
+//	auto to = Drawable::toPixels(zbuffer, attr, *_to, _color);
+//
+//	if (!_is_init_pixels)
+//	{
+//		_from_px = from;
+//		_to_px = to;
+//		_is_init_pixels = true;
+//	}
+//
+//	_min_y_px = min(from.y, to.y);
+//	_max_y_px = max(from.y, to.y);
+//
+//	if ((from.x < 0 && to.x < 0) || 
+//		(from.y < 0 && to.y < 0) ||
+//		(from.x >= zbuffer.getWidth() && to.x >= zbuffer.getWidth()) ||
+//		(from.y >= zbuffer.getHeight() && to.y >= zbuffer.getHeight()))
+//	{
+//		return;
+//	}
+//
+//	boundPixels(from, to, zbuffer.getWidth(), zbuffer.getHeight());
+//
+//	midPoint(zbuffer, attr, from, to, _color);
+//}
 
 double Line::interpolateDepth(const int &x, const int &y, const Pixel &from, const Pixel &to)
 {
@@ -110,47 +110,47 @@ Vec3d Line::interpolatePos(const int &x, const int &y, const Pixel &from, const 
 	return res;
 }
 
-void Line::midPoint(ZBuffer &zbuffer, const Attr &attr, const Pixel &from, const Pixel &to, const Color &color)
-{
-	auto p1 = initFrom(from, to);
-	auto p2 = initTo(from, to);
-
-	int x1 = p1(0);
-	int y1 = p1(1);
-	int x2 = p2(0);
-	int y2 = p2(1);
-
-	int x = p1(0);
-	int y = p1(1);
-	int dy = y2 - y1;
-	int dx = x2 - x1;
-	int d = 2 * dy - dx;
-	int de = 2 * dy;
-	int dne = 2 * (dy - dx);
-
-	while (x <= x2)
-	{
-		auto new_x = calcX(x, y, from, to);
-		auto new_y = calcY(x, y, from, to);
-
-		//auto depth = interpolateDepth(new_x, new_y, from, to);
-		//auto normal = interpolateNormal(new_x, new_y, from, to);
-		//auto pos = interpolatePos(new_x, new_y, from, to);
-		zbuffer.set({ new_x, new_y, 0.0, Vec3d(), Vec3d(), color });
-
-		if (d < 0)
-		{
-			d += de;
-			x++;
-		}
-		else
-		{
-			d += dne;
-			x++;
-			y++;
-		}
-	}
-}
+//void Line::midPoint(ZBuffer &zbuffer, const Attr &attr, const Pixel &from, const Pixel &to, const Color &color)
+//{
+//	auto p1 = initFrom(from, to);
+//	auto p2 = initTo(from, to);
+//
+//	int x1 = p1(0);
+//	int y1 = p1(1);
+//	int x2 = p2(0);
+//	int y2 = p2(1);
+//
+//	int x = p1(0);
+//	int y = p1(1);
+//	int dy = y2 - y1;
+//	int dx = x2 - x1;
+//	int d = 2 * dy - dx;
+//	int de = 2 * dy;
+//	int dne = 2 * (dy - dx);
+//
+//	while (x <= x2)
+//	{
+//		auto new_x = calcX(x, y, from, to);
+//		auto new_y = calcY(x, y, from, to);
+//
+//		//auto depth = interpolateDepth(new_x, new_y, from, to);
+//		//auto normal = interpolateNormal(new_x, new_y, from, to);
+//		//auto pos = interpolatePos(new_x, new_y, from, to);
+//		zbuffer.set({ new_x, new_y, 0.0, Vec3d(), Vec3d(), color });
+//
+//		if (d < 0)
+//		{
+//			d += de;
+//			x++;
+//		}
+//		else
+//		{
+//			d += dne;
+//			x++;
+//			y++;
+//		}
+//	}
+//}
 
 Vec2i Line::initFrom(const Pixel &from, const Pixel &to)
 {

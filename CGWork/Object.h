@@ -1,14 +1,14 @@
-#include "Mesh.h"
-#include "Draw.h"
-#include "Drawable.h"
+#pragma once
 
-class Object : public Drawable
+#include "Mesh.h"
+
+class Object
 {
 public:
 	Object(CString str);
 	~Object() = default;
 	void addMesh(const Mesh& mesh);
-	 std::vector<Mesh>& getMeshs()  { return _meshes; }
+	std::vector<Mesh>& getMeshs()  { return _meshes; }
 	Object &rotateX(const double angle_deg);
 	Object &rotateY(const double angle_deg);
 	Object &rotateZ(const double angle_deg);
@@ -24,11 +24,11 @@ public:
 	const COLORREF getBBColor() const { return _BBColor; }
 	Object& setBBColor(const COLORREF &color) {_BBColor = color;  return *this;}
 	Vec3d getPos()const { return _pos; }
-	virtual void draw(ZBuffer &zbuffer, const Attr &attr) override;
+	//virtual void draw(ZBuffer &zbuffer, const Attr &attr) override;
 
 
 private: //methods
-	Object &drawBoudingBox(ZBuffer &zbuffer, const Attr &attr);
+	//bject &drawBoudingBox(ZBuffer &zbuffer, const Attr &attr);
 
 private: //members
 	std::vector<Mesh> _meshes;

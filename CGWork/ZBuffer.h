@@ -1,9 +1,11 @@
 #pragma once
 
+#include <afxwin.h>
+
 #include "Matrices.h"
-#include "afxwin.h"
 #include "Light.h"
 #include "Types.h"
+#include "Object.h"
 
 class ZBuffer
 {
@@ -18,6 +20,7 @@ public:
 	uint getHeight() const { return _height; }
 	bool isEmpty() const { return _bits == nullptr; }
 	int *getBits() const { return _bits; }
+	void draw(const Object &object, const Attr &attr);
 	~ZBuffer();
 
 private: //defs

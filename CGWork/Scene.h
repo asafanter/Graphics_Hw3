@@ -5,10 +5,8 @@
 #include <afxwin.h>
 #include <vector>
 
-#include "Draw.h"
 #include "Object.h"
 #include "Matrices.h"
-#include "Drawable.h"
 #include "ZBuffer.h"
 
 
