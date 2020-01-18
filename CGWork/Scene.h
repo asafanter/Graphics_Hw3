@@ -35,6 +35,7 @@ public:
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
 	Scene& setVerticesNormalsColor(const COLORREF &color, int Id);
 	Scene& setBoundingBoxColor(const COLORREF &color, int Id);
+	void setDrawingMode(const DrawingMode &drawing_mode) { _drawing_mode = drawing_mode; }
 	void draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVecNormals, bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox) ;
 
 private:
@@ -53,6 +54,7 @@ private:
 	COLORREF _background_color;
 	Camera _camera;
 	Tmatd _look_at;
+	DrawingMode _drawing_mode;
 
 
 

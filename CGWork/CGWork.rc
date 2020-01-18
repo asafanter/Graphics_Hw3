@@ -132,6 +132,11 @@ BEGIN
         MENUITEM "view",                        ID_COORDINATESYSTEM_VIEW, CHECKED
         MENUITEM "model",                       ID_COORDINATESYSTEM_MODEL
     END
+    POPUP "DrawingMode"
+    BEGIN
+        MENUITEM "WireFrame",                   ID_DRAWINGMODE_WIREFRAME
+        MENUITEM "Solid",                       ID_DRAWINGMODE_SOLID
+    END
 END
 
 

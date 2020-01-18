@@ -120,6 +120,8 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_COMMAND(ID_OPTIONS_POLYGONFINENESSTOLERANCE, &CCGWorkView::OnOptionsPolygonfinenesstolerance)
 	ON_COMMAND(ID_ACTIVE_MESH_CONTROL ,&CCGWorkView::OnOptionsActiveMesh )
 	
+	ON_COMMAND(ID_DRAWINGMODE_WIREFRAME, &CCGWorkView::OnDrawingmodeWireframe)
+	ON_COMMAND(ID_DRAWINGMODE_SOLID, &CCGWorkView::OnDrawingmodeSolid)
 END_MESSAGE_MAP()
 
 
@@ -1024,4 +1026,16 @@ void CCGWorkView::OnOptionsActiveMesh()
 			m_nActiveMesh = -1;
 	}
 	_active_mesh_dialog.setActive(m_nActiveMesh);
+}
+
+
+void CCGWorkView::OnDrawingmodeWireframe()
+{
+	scene.setDrawingMode(DrawingMode::WIRE_FRAME);
+}
+
+
+void CCGWorkView::OnDrawingmodeSolid()
+{
+	scene.setDrawingMode(DrawingMode::SOLID);
 }

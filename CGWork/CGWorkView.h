@@ -19,6 +19,7 @@
 #include "PerspectiveDialog.h"
 #include "PolygonDialog.h"
 #include "ActiveMeshDialog.h"
+#include "Types.h"
 
 class CCGWorkView : public CView
 {
@@ -72,7 +73,6 @@ private:
 	PerspectiveDialog _perspective_dialog;
 	PolygonDialog _polygon_dialog;
 	ActiveMeshDialog  _active_mesh_dialog;
-
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -184,6 +184,8 @@ public:
 	afx_msg void OnOptionsPerspectivecontrol();
 	afx_msg void OnOptionsPolygonfinenesstolerance();
 	afx_msg void OnOptionsActiveMesh();
+	afx_msg void OnDrawingmodeWireframe();
+	afx_msg void OnDrawingmodeSolid();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp
