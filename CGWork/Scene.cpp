@@ -47,9 +47,9 @@ Tmatd Scene::lookAt(const Vec3d &eye, const Vec3d &at, const Vec3d &up)
 	Vec3d u = up.cross(n).normalize();
 	Vec3d v = n.cross(u).normalize();
 
-	return Tmatd(u(0), v(0), n(0), -eye(0),
-		u(1), v(1), n(1), -eye(1),
-		u(2), v(2), n(2), -eye(2),
+	return Tmatd(u(0), v(0), n(0), eye(0),
+		u(1), v(1), n(1), eye(1),
+		u(2), v(2), n(2), eye(2),
 		0, 0, 0, 1);
 }
 

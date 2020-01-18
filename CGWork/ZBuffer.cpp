@@ -173,7 +173,10 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	auto pos = p2.pos * a + p1.pos * (1 - a);
 	auto normal = p2.normal * a + p1.normal * (1 - a);
 
-	Vec3 light_pos = { 0.0, 0.0, -0.2 };
+	//Vec4d test_light = _attr.T * Vec4d(0.0, 0.0, 1.0, 1.0);
+
+	//Vec3 light_pos = { test_light(0), test_light(1), test_light(2)};
+	Vec3 light_pos = { 0.0, 0.0, 3.0 };
 	Vec3 light_dir = light_pos - pos;
 	light_dir.normalize();
 
