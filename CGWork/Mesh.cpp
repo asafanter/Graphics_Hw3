@@ -31,7 +31,7 @@ Mesh &Mesh::setFacesNormalsColor(const Color &new_color)
 
 Mesh & Mesh::calcVNormals()
 {
-	for (auto &polygon : _polygons)
+	for (auto &polygon : _raw_polygons)
 	{
 		for (auto &vertex : polygon->getVertices())
 		{
@@ -48,7 +48,6 @@ Mesh & Mesh::calcVNormals()
 		}
 	}
 
-
 	return *this;
 }
 
@@ -57,7 +56,7 @@ Mesh &Mesh::addRawPolygon(std::shared_ptr<Poly> &new_polygon)
 	for (auto &vertex : new_polygon->getVertices())
 	{
 		vertex->neighbors_polygons.push_back(new_polygon);
-		for (auto &exist_polygon : _polygons)
+		for (auto &exist_polygon : _raw_polygons)
 		{
 			for (auto &exist_vertex : exist_polygon->getVertices())
 			{
@@ -85,7 +84,7 @@ Mesh &Mesh::addRawPolygon(std::shared_ptr<Poly> &new_polygon)
 
 	_raw_polygons.push_back(new_polygon);
 
-	if (_polygons.size() == 1)
+	if (_raw_polygons.size() == 1)
 	{
 		_bounding_box.min_x = new_polygon->getBoundingBox().min_x;
 		_bounding_box.max_x = new_polygon->getBoundingBox().max_x;

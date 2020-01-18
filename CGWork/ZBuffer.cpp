@@ -184,64 +184,64 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 
 	Color color(RGB(r, g, b));
 
-	return { p.x, p.y, depth, p.color, pos, normal };
+	return { p.x, p.y, depth, p1.color, pos, normal };
 }
 
 Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 {
 	int dy = p2.y - p1.y;
 	int dx = p2.x - p1.x;
-	int x = 1;
+	int x = -1;
 	int y = -1;
-	Pixel res = interpolatePixel(p1, p2, p);
+	Pixel res = {};
 
 	if (p2.y == p.y && p2.x == p.x)
 	{
-		return res;
+		x = p.x;
+		y = p.y;
 	}
-
-	if (p2.y == p.y && p2.x > p.x)
+	else if (p2.y == p.y && p2.x > p.x)
 	{
-		res.x = p.x + 1;
-		res.y = p.y;
-		return res;
+		x = p.x + 1;
+		y = p.y;
 	}
-	if (p2.y == p.y && p2.x < p.x)
+	else if (p2.y == p.y && p2.x < p.x)
 	{
-		res.x = p.x - 1;
-		res.y = p.y;
-		return res;
+		x = p.x - 1;
+		y = p.y;
 	}
-	if (p2.x == p.x && p2.y > p.y)
+	else if (p2.x == p.x && p2.y > p.y)
 	{
-		res.x = p.x;
-		res.y = p.y + 1;
-		return res;
+		x = p.x;
+		y = p.y + 1;
 	}
-	if (p2.x == p.x && p2.y < p.y)
+	else if (p2.x == p.x && p2.y < p.y)
 	{
-		res.x = p.x;
-		res.y = p.y - 1;
-		return res;
-	}
-
-	double m = static_cast<double>(dy) / static_cast<double>(dx);
-
-	int quarter = calcQuarter(p2, p, m);
-
-	if (quarter == 1 || quarter == 3 || quarter == 5 || quarter == 7)
-	{
-		x = quarter < 4 ? p.x + 1 : p.x - 1;
-		y = m * (x - p1.x) + p1.y;
+		x = p.x;
+		y = p.y - 1;
 	}
 	else
 	{
-		y = quarter == 2 || quarter == 6 ? p.y + 1 : p.y - 1;
-		x = (1 / m) * (y + m * p1.x - p1.y);
+		double m = static_cast<double>(dy) / static_cast<double>(dx);
+
+		int quarter = calcQuarter(p2, p, m);
+
+		if (quarter == 1 || quarter == 3 || quarter == 5 || quarter == 7)
+		{
+			x = quarter < 4 ? p.x + 1 : p.x - 1;
+			y = m * (x - p1.x) + p1.y;
+		}
+		else
+		{
+			y = quarter == 2 || quarter == 6 ? p.y + 1 : p.y - 1;
+			x = (1 / m) * (y + m * p1.x - p1.y);
+		}
 	}
 
 	res.x = x;
 	res.y = y;
+	res = interpolatePixel(p1, p2, res);
+
 	return res;
 }
 
@@ -334,6 +334,10 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 		curr1 = to_via == true ? nextPixelFill(start, via, curr1) : nextPixelFill(via, target, curr1);
 		curr2 = nextPixelFill(start, target, curr2);
 
+		if (curr1.y == 312)
+		{
+			int koko = 7;
+		}
 		if (to_via && curr1.y == via.y)
 		{
 			to_via = false;
