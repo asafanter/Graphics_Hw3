@@ -352,13 +352,16 @@ void ZBuffer::draw(const Object &object, const Attr &attr)
 {
 	for (auto &mesh : object.getMeshes())
 	{
-		for (auto &polygon : mesh.getPolygons())
+		if (attr.drawing_mode == DrawingMode::WIRE_FRAME)
 		{
-			if (attr.drawing_mode == DrawingMode::WIRE_FRAME)
+			for (auto &polygon : mesh.getRawPolygons())
 			{
 				drawPolygonWireFrame(*polygon, attr);
 			}
-			else
+		}
+		else
+		{
+			for (auto &polygon : mesh.getPolygons())
 			{
 				drawPolygonSolid(*polygon, attr);
 			}
