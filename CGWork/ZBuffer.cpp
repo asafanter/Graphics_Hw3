@@ -154,37 +154,43 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 {
 	double line_dist = std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
 	double dist_from_begin = std::sqrt(std::pow(p.x - p1.x, 2) + std::pow(p.y - p1.y, 2));
+	double a = 0.0;
 
 	if (p.x == p1.x && p.y == p1.y)
 	{
-		return p1;
+		a = 0.0;
 	}
-
-	if (p.x == p2.x && p.y == p2.y)
+	else if (p.x == p2.x && p.y == p2.y)
 	{
-		return p2;
+		a = 1.0;;
+	}
+	else
+	{
+		a = dist_from_begin / line_dist;
 	}
 
-	double a = dist_from_begin / line_dist;
-
+	if (p.x == 709 && p.y == 312)
+	{
+		int koko = 7;
+	}
+	
 	auto depth = a * p2.depth + (1 - a) * p1.depth;
 	auto pos = p2.pos * a + p1.pos * (1 - a);
 	auto normal = p2.normal * a + p1.normal * (1 - a);
 
-
 	Vec3 light_pos = { 0.0, 0.0, 1.0 };
-	Vec3 light_dir = light_pos - p.pos;
+	Vec3 light_dir = light_pos - pos;
 	light_dir.normalize();
 
-	auto test = p.normal.dot(light_dir);
+	auto test = normal.dot(light_dir);
 
-	auto r = GetRValue(p.color) * test;
-	auto g = GetGValue(p.color) * test;
-	auto b = GetBValue(p.color) * test;
+	auto r = GetRValue(_base_color) * test;
+	auto g = GetGValue(_base_color) * test;
+	auto b = GetBValue(_base_color) * test;
 
 	Color color(RGB(r, g, b));
 
-	return { p.x, p.y, depth, p1.color, pos, normal };
+	return { p.x, p.y, depth, color, normal, pos };
 }
 
 Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
@@ -247,6 +253,7 @@ Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 
 void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
 {
+	_base_color = polygon.getColor();
 	auto &vertices = polygon.getVertices();
 	Pixel first_pixel = {};
 	Pixel last_pixel = {};
@@ -315,6 +322,7 @@ Pixel ZBuffer::nextPixelFill(const Pixel &start, const Pixel &target, const Pixe
 
 void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 {
+	_base_color = polygon.getColor();
 	Pixel start = {};
 	Pixel via = {};
 	Pixel target = {};
@@ -326,6 +334,9 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 	auto curr1 = start.y == via.y ? via: start;
 	auto curr2 = start;
 	to_via = curr1.y != via.y;
+	
+	curr1 = interpolatePixel(start, via, curr1);
+	curr2 = interpolatePixel(start, target, curr2);
 
 	drawLine(curr1, curr2);
 
@@ -334,10 +345,6 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 		curr1 = to_via == true ? nextPixelFill(start, via, curr1) : nextPixelFill(via, target, curr1);
 		curr2 = nextPixelFill(start, target, curr2);
 
-		if (curr1.y == 312)
-		{
-			int koko = 7;
-		}
 		if (to_via && curr1.y == via.y)
 		{
 			to_via = false;

@@ -47,5 +47,6 @@ private: //members
 	uint _height;
 	Color _color;
 	std::vector<LightParams> _lights;
+	Color _base_color;
 };
 
