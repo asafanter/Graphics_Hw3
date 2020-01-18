@@ -169,16 +169,11 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 		a = dist_from_begin / line_dist;
 	}
 
-	if (p.x == 709 && p.y == 312)
-	{
-		int koko = 7;
-	}
-	
 	auto depth = a * p2.depth + (1 - a) * p1.depth;
 	auto pos = p2.pos * a + p1.pos * (1 - a);
 	auto normal = p2.normal * a + p1.normal * (1 - a);
 
-	Vec3 light_pos = { 0.0, 0.0, 1.0 };
+	Vec3 light_pos = { 0.0, 0.0, -0.2 };
 	Vec3 light_dir = light_pos - pos;
 	light_dir.normalize();
 
@@ -251,7 +246,7 @@ Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 	return res;
 }
 
-void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
+void ZBuffer::drawPolygonWireFrame(const Poly &polygon)
 {
 	_base_color = polygon.getColor();
 	auto &vertices = polygon.getVertices();
@@ -260,8 +255,8 @@ void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
 
 	for (int i = 0; i < vertices.size() - 1; i++)
 	{
-		auto px1 = toPixel(*vertices[i], attr);
-		auto px2 = toPixel(*vertices[i + 1], attr);
+		auto px1 = toPixel(*vertices[i]);
+		auto px2 = toPixel(*vertices[i + 1]);
 		drawLine(px1, px2);
 
 		if (i == 0)
@@ -277,13 +272,13 @@ void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
 }
 
 void ZBuffer::calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
-	const Poly &polygon, const Attr &attr)
+	const Poly &polygon)
 {
 	auto vertices = polygon.getVertices();
 	std::vector<Pixel> pixels;
 	for (auto &vertex : vertices)
 	{
-		pixels.push_back(toPixel(*vertex, attr));
+		pixels.push_back(toPixel(*vertex));
 	}
 
 	std::sort(pixels.begin(), pixels.end(), [](const Pixel &p1, const Pixel &p2)
@@ -320,7 +315,7 @@ Pixel ZBuffer::nextPixelFill(const Pixel &start, const Pixel &target, const Pixe
 	return curr;
 }
 
-void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
+void ZBuffer::drawPolygonSolid(const Poly &polygon)
 {
 	_base_color = polygon.getColor();
 	Pixel start = {};
@@ -329,7 +324,7 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 	bool to_via = true;
 	bool is_filled = false;
 
-	calcDrawOrder(start, via, target, polygon, attr);
+	calcDrawOrder(start, via, target, polygon);
 
 	auto curr1 = start.y == via.y ? via: start;
 	auto curr2 = start;
@@ -359,22 +354,22 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 	}
 }
 
-void ZBuffer::draw(const Object &object, const Attr &attr)
+void ZBuffer::draw(const Object &object)
 {
 	for (auto &mesh : object.getMeshes())
 	{
-		if (attr.drawing_mode == DrawingMode::WIRE_FRAME)
+		if (_attr.drawing_mode == DrawingMode::WIRE_FRAME)
 		{
 			for (auto &polygon : mesh.getRawPolygons())
 			{
-				drawPolygonWireFrame(*polygon, attr);
+				drawPolygonWireFrame(*polygon);
 			}
 		}
 		else
 		{
 			for (auto &polygon : mesh.getPolygons())
 			{
-				drawPolygonSolid(*polygon, attr);
+				drawPolygonSolid(*polygon);
 			}
 		}
 	}
@@ -392,17 +387,21 @@ void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
 	}
 }
 
-Pixel ZBuffer::toPixel(const Vertex &vertex, const Attr &attr)
+Pixel ZBuffer::toPixel(const Vertex &vertex)
 {
-	auto p = attr.T * vertex.pos.toHomogeneous();
-	p /= p(3);
+	auto pos = _attr.T * vertex.pos.toHomogeneous();
+	pos /= pos(3);
 
-	int x_res = static_cast<uint>((_width / 2.0) * (p(0) + 1.0));
-	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - p(1)));
+	auto normal = _attr.T * vertex.calc_normal.toHomogeneous();
+	normal /= normal(3);
+	Vec3 final_normal = { normal(0), normal(1), normal(2) };
+	final_normal.normalize();
+	
+	int x_res = static_cast<uint>((_width / 2.0) * (pos(0) + 1.0));
+	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - pos(1)));
 
-	return { x_res, y_res, p(2), vertex.color, 
-	{vertex.calc_normal(0), vertex.calc_normal(1), vertex.calc_normal(2)},
-	{vertex.pos(0), vertex.pos(1), vertex.pos(2)} };
+	return { x_res, y_res, pos(2), vertex.color, final_normal,
+	{pos(0), pos(1), pos(2)} };
 }
 
 ZBuffer::~ZBuffer()

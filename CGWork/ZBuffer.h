@@ -20,7 +20,7 @@ public:
 	uint getHeight() const { return _height; }
 	bool isEmpty() const { return _bits == nullptr; }
 	int *getBits() const { return _bits; }
-	void draw(const Object &object, const Attr &attr);
+	void draw(const Object &object);
 	~ZBuffer();
 
 private: //defs
@@ -32,12 +32,13 @@ public: //methods
 	Pixel nextPixelFill(const Pixel &start, const Pixel &target, const Pixel &p);
 	int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
 	void drawLine(const Pixel &p1, const Pixel &p2);
-	Pixel toPixel(const Vertex &vertex, const Attr &attr);
+	Pixel toPixel(const Vertex &vertex);
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
-	void drawPolygonWireFrame(const Poly &polygon, const Attr &attr);
-	void drawPolygonSolid(const Poly &polygon, const Attr &attr);
+	void drawPolygonWireFrame(const Poly &polygon);
+	void drawPolygonSolid(const Poly &polygon);
 	void calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
-		const Poly &polygon, const Attr &Attr);
+		const Poly &polygon);
+	void setAttributes(const Attr &attr) { _attr = attr; }
 
 private: //members
 	int *_bits;
@@ -48,5 +49,6 @@ private: //members
 	Color _color;
 	std::vector<LightParams> _lights;
 	Color _base_color;
+	Attr _attr;
 };
 
