@@ -13,12 +13,12 @@ public:
 	Poly &addVertex(const std::shared_ptr<Vertex> &vertex);
 	void SetGivenFaceNormal(double x, double y, double z);
 	void CalcFaceNormal();
+	void setNormal(const Vec3d &normal) { _fnormal = normal; }
 	const Vec3d getCalcFaceNormal() const { return _fnormal; }
 	const Vec3d getGivenFaceNormal() const { return _fGivenNormal; }
 	const BoundingBox &getBoundingBox() const { return _bounding_box; }
 	const std::vector<std::shared_ptr<Vertex>> getVertices() const { return _vertices; }
 	std::vector<std::shared_ptr<Vertex>> &getVertices() { return _vertices; }
-	//void draw(ZBuffer &zbuffer, const Attr &attr) override;
 	Color getColor() const { return _color; }
 	Vec3d getPos() const { return _pos; }
 	Poly &setColor(const Color &new_color) { _color = new_color; return *this; }

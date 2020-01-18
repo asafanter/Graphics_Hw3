@@ -52,7 +52,7 @@ Mesh & Mesh::calcVNormals()
 	return *this;
 }
 
-Mesh &Mesh::addPolygon(std::shared_ptr<Poly> &new_polygon)
+Mesh &Mesh::addRawPolygon(std::shared_ptr<Poly> &new_polygon)
 {
 	for (auto &vertex : new_polygon->getVertices())
 	{
@@ -83,7 +83,7 @@ Mesh &Mesh::addPolygon(std::shared_ptr<Poly> &new_polygon)
 		}
 	}
 
-	_polygons.push_back(new_polygon);
+	_raw_polygons.push_back(new_polygon);
 
 	if (_polygons.size() == 1)
 	{

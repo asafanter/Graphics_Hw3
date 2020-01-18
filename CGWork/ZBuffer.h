@@ -29,12 +29,15 @@ private: //defs
 public: //methods
 	Color RGBToBGR(COLORREF col);
 	Pixel nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
+	Pixel nextPixelFill(const Pixel &start, const Pixel &target, const Pixel &p);
 	int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
 	void drawLine(const Pixel &p1, const Pixel &p2);
 	Pixel toPixel(const Vertex &vertex, const Attr &attr);
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	void drawPolygonWireFrame(const Poly &polygon, const Attr &attr);
 	void drawPolygonSolid(const Poly &polygon, const Attr &attr);
+	void calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
+		const Poly &polygon, const Attr &Attr);
 
 private: //members
 	int *_bits;

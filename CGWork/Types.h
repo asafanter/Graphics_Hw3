@@ -8,14 +8,52 @@ using Color = COLORREF;
 
 class Poly;
 
+struct Vec3
+{
+	double x;
+	double y;
+	double z;
+
+	Vec3 &normalize()
+	{
+		double norm = sqrt(x * x + y * y + z * z);
+		if (norm == 0)
+		{
+			return *this;
+		}
+
+		x /= norm;
+		y /= norm;
+		z /= norm;
+
+		return *this;
+	}
+	Vec3 operator+(const Vec3 &other) const
+	{
+		return { x + other.x, y + other.y, z + other.z };
+	}
+	Vec3 operator-(const Vec3 &other) const
+	{
+		return { x - other.x, y - other.y, z - other.z };
+	}
+	Vec3 operator*(const double &scalar) const
+	{
+		return { x * scalar, y * scalar, z * scalar };
+	}
+	double dot(const Vec3 &other) const
+	{
+		return x * other.x + y * other.y + z * other.z;
+	}
+};
+
 struct Pixel
 {
 	int x;
 	int y;
 	double depth;
-	//Vec3d normal;
-	//Vec3d pos;
 	Color color;
+	Vec3 normal;
+	Vec3 pos;
 
 	bool operator==(const Pixel &p)
 	{

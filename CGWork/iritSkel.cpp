@@ -201,12 +201,12 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 			   access the normal by the first 3 components of PPolygon->Plane */
 
 			PVertex = PPolygon -> PVertex;
-			std::shared_ptr<Poly> polygon = std::make_shared<Poly>();
+			std::shared_ptr<Poly> raw_polygon = std::make_shared<Poly>();
 
 			if (IP_HAS_PLANE_POLY(PPolygon)) {//set the normal to the polygon
 				
 				//get it from the coef equation
-				polygon->SetGivenFaceNormal(PPolygon->Plane[0], PPolygon->Plane[1], PPolygon->Plane[2]);
+				raw_polygon->SetGivenFaceNormal(PPolygon->Plane[0], PPolygon->Plane[1], PPolygon->Plane[2]);
 			}
 						
 			do {			     /* Assume at least one edge in polygon! */
@@ -226,21 +226,28 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 					vertex->given_normal = Vec3d(PVertex->Normal[0], PVertex->Normal[1], PVertex->Normal[2]);
 				}
 
-				polygon->addVertex(vertex);
+				raw_polygon->addVertex(vertex);
 				PVertex = PVertex -> Pnext;	
 			}
 			while (PVertex != PPolygon -> PVertex && PVertex != NULL);
 			/* Close the polygon. */
-			auto polygons = Poly::createPolygons3Vertices(*polygon);
 
-			for (auto &p : polygons)
-			{
-				p->CalcFaceNormal();
-				p->setColor(color);
-				mesh.addPolygon(p);
-			}
+			raw_polygon->CalcFaceNormal();
+			raw_polygon->setColor(color);
+			mesh.addRawPolygon(raw_polygon);
+			
 	}
 	mesh.calcVNormals();
+	for (auto &raw_polygon : mesh.getRawPolygons())
+	{
+		auto polygons = Poly::createPolygons3Vertices(*raw_polygon);
+
+		for (auto &polygon : polygons)
+		{
+			mesh._polygons.push_back(polygon);
+		}
+	}
+	
 	/* Close the object. */
 
 	int last_Id = scene.getObjects().size() - 1;

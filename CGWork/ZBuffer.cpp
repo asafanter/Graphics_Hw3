@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "ZBuffer.h"
 
 ZBuffer::ZBuffer() :
@@ -67,7 +69,7 @@ ZBuffer &ZBuffer::set(const Pixel &p)
 	}
 	else
 	{
-		if (p.depth > _z[pos])
+		if (p.depth > _z[pos] && _bits[pos] != RGBToBGR(p.color))
 		{
 			_bits[pos] = RGBToBGR(p.color);
 			_z[pos] = p.depth;
@@ -166,8 +168,23 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	double a = dist_from_begin / line_dist;
 
 	auto depth = a * p2.depth + (1 - a) * p1.depth;
+	auto pos = p2.pos * a + p1.pos * (1 - a);
+	auto normal = p2.normal * a + p1.normal * (1 - a);
 
-	return { p.x, p.y, depth, p.color };
+
+	Vec3 light_pos = { 0.0, 0.0, 1.0 };
+	Vec3 light_dir = light_pos - p.pos;
+	light_dir.normalize();
+
+	auto test = p.normal.dot(light_dir);
+
+	auto r = GetRValue(p.color) * test;
+	auto g = GetGValue(p.color) * test;
+	auto b = GetBValue(p.color) * test;
+
+	Color color(RGB(r, g, b));
+
+	return { p.x, p.y, depth, p.color, pos, normal };
 }
 
 Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
@@ -177,6 +194,11 @@ Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 	int x = 1;
 	int y = -1;
 	Pixel res = interpolatePixel(p1, p2, p);
+
+	if (p2.y == p.y && p2.x == p.x)
+	{
+		return res;
+	}
 
 	if (p2.y == p.y && p2.x > p.x)
 	{
@@ -247,30 +269,82 @@ void ZBuffer::drawPolygonWireFrame(const Poly &polygon, const Attr &attr)
 	drawLine(first_pixel, last_pixel);
 }
 
+void ZBuffer::calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
+	const Poly &polygon, const Attr &attr)
+{
+	auto vertices = polygon.getVertices();
+	std::vector<Pixel> pixels;
+	for (auto &vertex : vertices)
+	{
+		pixels.push_back(toPixel(*vertex, attr));
+	}
+
+	std::sort(pixels.begin(), pixels.end(), [](const Pixel &p1, const Pixel &p2)
+	{
+		if (p1.y == p2.y)
+		{
+			return p1.depth > p2.depth;
+		}
+
+		return p1.y < p2.y;
+	});
+
+	start = pixels[0];
+	via = pixels[1];
+	target = pixels[2];
+}
+
+Pixel ZBuffer::nextPixelFill(const Pixel &start, const Pixel &target, const Pixel &p)
+{
+	auto curr = p;
+	int y = curr.y;
+
+	do
+	{
+		y = curr.y;
+		curr = nextPixel(start, target, curr);
+	} while (curr.y - y != 1 && curr.y != target.y);
+
+	if (curr.y == target.y)
+	{
+		return target;
+	}
+
+	return curr;
+}
+
 void ZBuffer::drawPolygonSolid(const Poly &polygon, const Attr &attr)
 {
-	auto &vertices = polygon.getVertices();
+	Pixel start = {};
+	Pixel via = {};
+	Pixel target = {};
+	bool to_via = true;
+	bool is_filled = false;
 
-	auto start = toPixel(*vertices[0], attr);
-	auto target1 = toPixel(*vertices[1], attr);
-	auto target2 = toPixel(*vertices[2], attr);
+	calcDrawOrder(start, via, target, polygon, attr);
 
-	auto curr1 = start;
+	auto curr1 = start.y == via.y ? via: start;
 	auto curr2 = start;
+	to_via = curr1.y != via.y;
 
 	drawLine(curr1, curr2);
 
-	while (curr1 != target1 || curr2 != target2)
+	while (!is_filled)
 	{
-		if (curr1 != target1)
+		curr1 = to_via == true ? nextPixelFill(start, via, curr1) : nextPixelFill(via, target, curr1);
+		curr2 = nextPixelFill(start, target, curr2);
+
+		if (to_via && curr1.y == via.y)
 		{
-			curr1 = nextPixel(start, target1, curr1);
+			to_via = false;
 		}
-		if (curr2 != target2)
-		{
-			curr2 = nextPixel(start, target2, curr2);
-		}
+
 		drawLine(curr1, curr2);
+
+		if (curr1 == target && curr2 == target)
+		{
+			is_filled = true;
+		}
 	}
 }
 
@@ -312,7 +386,9 @@ Pixel ZBuffer::toPixel(const Vertex &vertex, const Attr &attr)
 	int x_res = static_cast<uint>((_width / 2.0) * (p(0) + 1.0));
 	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - p(1)));
 
-	return { x_res, y_res, p(2), vertex.color };
+	return { x_res, y_res, p(2), vertex.color, 
+	{vertex.calc_normal(0), vertex.calc_normal(1), vertex.calc_normal(2)},
+	{vertex.pos(0), vertex.pos(1), vertex.pos(2)} };
 }
 
 ZBuffer::~ZBuffer()

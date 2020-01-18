@@ -95,6 +95,12 @@ std::vector<std::shared_ptr<Poly>> Poly::createPolygons3Vertices(const Poly &pol
 		polygon2->addVertex(vertices[3]);
 		polygon2->addVertex(vertices[0]);
 
+		polygon1->setColor(polygon.getColor());
+		polygon1->setNormal(polygon.getCalcFaceNormal());
+
+		polygon2->setColor(polygon.getColor());
+		polygon2->setNormal(polygon.getCalcFaceNormal());
+
 		res.push_back(polygon1);
 		res.push_back(polygon2);
 	}
