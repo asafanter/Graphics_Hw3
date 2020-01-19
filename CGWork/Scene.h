@@ -27,6 +27,7 @@ public:
 	bool isInitialized() const { return _is_initialized; }
 	Scene &setProjection(const Tmatd &projection) { _projection = projection; return *this; }
 	Scene &reset();
+	void flipNormals();
 
 	COLORREF getBackgroundColor() const { return _background_color; }
 	Scene& setBackgroundColor(const COLORREF &color) { _background_color = color; return *this; }
@@ -35,6 +36,7 @@ public:
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
 	Scene& setVerticesNormalsColor(const COLORREF &color, int Id);
 	Scene& setBoundingBoxColor(const COLORREF &color, int Id);
+	bool isNormalsFliped() const { return _is_normals_fliped; }
 	void setDrawingMode(const DrawingMode &drawing_mode) { _drawing_mode = drawing_mode; }
 	void addLights(const std::vector<LightParams> &lights) { _lights = lights; }
 	void addAmbient(const LightParams &ambient) { _ambient = ambient; }
@@ -59,6 +61,7 @@ private:
 	DrawingMode _drawing_mode;
 	std::vector<LightParams> _lights;
 	LightParams _ambient;
+	bool _is_normals_fliped;
 };
 
 

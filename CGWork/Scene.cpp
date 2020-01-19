@@ -13,7 +13,8 @@ Scene::Scene() :
 	_camera({}),
 	_look_at(),
 	_drawing_mode(DrawingMode::SOLID),
-	_lights()
+	_lights(),
+	_is_normals_fliped(false)
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -21,6 +22,16 @@ Scene::Scene() :
 	_camera.up = Vec3d(0.0, 1.0, 0.0);
 
 	_look_at = lookAt(_camera.pos, _camera.pos + _camera.front, _camera.up);
+}
+
+void Scene::flipNormals()
+{
+	_is_normals_fliped = !_is_normals_fliped;
+
+	for (auto &object : _objs)
+	{
+		object.flipNormals();
+	}
 }
 
 Scene &Scene::reset()

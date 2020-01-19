@@ -13,6 +13,7 @@ public:
 	Poly &addVertex(const std::shared_ptr<Vertex> &vertex);
 	void SetGivenFaceNormal(double x, double y, double z);
 	void CalcFaceNormal();
+	void flipNormal();
 	void setNormal(const Vec3d &normal) { _fnormal = normal; }
 	const Vec3d getCalcFaceNormal() const { return _fnormal; }
 	const Vec3d getGivenFaceNormal() const { return _fGivenNormal; }

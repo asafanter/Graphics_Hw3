@@ -244,7 +244,7 @@ bool CGSkelStoreData(IPObjectStruct *PObj)
 
 		for (auto &polygon : polygons)
 		{
-			mesh._polygons.push_back(polygon);
+			mesh.addPolygon(polygon);
 		}
 	}
 	

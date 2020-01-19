@@ -122,6 +122,10 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	
 	ON_COMMAND(ID_DRAWINGMODE_WIREFRAME, &CCGWorkView::OnDrawingmodeWireframe)
 	ON_COMMAND(ID_DRAWINGMODE_SOLID, &CCGWorkView::OnDrawingmodeSolid)
+	ON_COMMAND(ID_NORMALSDIRECTION_REGULAR, &CCGWorkView::OnNormalsdirectionRegular)
+	ON_COMMAND(ID_NORMALSDIRECTION_FLIP, &CCGWorkView::OnNormalsdirectionFlip)
+	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_FLIP, &CCGWorkView::OnUpdateNormalsdirectionFlip)
+	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_REGULAR, &CCGWorkView::OnUpdateNormalsdirectionRegular)
 END_MESSAGE_MAP()
 
 
@@ -1049,4 +1053,34 @@ void CCGWorkView::OnDrawingmodeWireframe()
 void CCGWorkView::OnDrawingmodeSolid()
 {
 	scene.setDrawingMode(DrawingMode::SOLID);
+}
+
+
+void CCGWorkView::OnNormalsdirectionRegular()
+{
+	if (scene.isNormalsFliped())
+	{
+		scene.flipNormals();
+	}
+}
+
+
+void CCGWorkView::OnNormalsdirectionFlip()
+{
+	if (!scene.isNormalsFliped())
+	{
+		scene.flipNormals();
+	}
+}
+
+
+void CCGWorkView::OnUpdateNormalsdirectionFlip(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.isNormalsFliped());
+}
+
+
+void CCGWorkView::OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(!scene.isNormalsFliped());
 }

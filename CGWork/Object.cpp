@@ -11,6 +11,14 @@ Object::Object( CString str) :
 
 }
 
+void Object::flipNormals()
+{
+	for (auto &mesh : _meshes)
+	{
+		mesh.flipNormals();
+	}
+}
+
 void Object::addMesh(const Mesh &mesh)
 {
 	_meshes.push_back(mesh);

@@ -15,6 +15,7 @@ public:
 	Object &rotateZ(const double angle_deg);
 	Object &translate(const Vec3d &translation);
 	Object &scale(const Vec3d &scale);
+	void flipNormals();
 	const Tmatd getModel() const;
 	std::vector<std::pair<Vec4d, Vec4d>> getBoundingBoxLines();
 	CString getName() { return _name; }

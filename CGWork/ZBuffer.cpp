@@ -181,7 +181,8 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	Vec3 diffuse = calcDiffuse(pos, normal);
 	Vec3 specular = calcSpecular(pos, normal);
 
-	Color color = vecToColor(ambient + diffuse + specular);
+	//Color color = vecToColor(ambient + diffuse + specular);
+	Color color = vecToColor(diffuse);
 
 	return { p.x, p.y, depth, color, normal, pos };
 }

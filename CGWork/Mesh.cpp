@@ -4,6 +4,7 @@
 
 //init all colors to same color
 Mesh::Mesh(COLORREF col, char* str) :
+	_raw_polygons(),
 	_polygons(),
 	_vertices(),
 	_pos(0.0, 0.0, 0.0),
@@ -27,6 +28,19 @@ Mesh &Mesh::setFacesNormalsColor(const Color &new_color)
 	}
 
 	return *this;
+}
+
+void Mesh::flipNormals()
+{
+	for (auto &polygon : _polygons)
+	{
+		polygon->flipNormal();
+	}
+
+	for (auto &vertex : _vertices)
+	{
+		vertex->calc_normal = -vertex->calc_normal;
+	}
 }
 
 Mesh & Mesh::calcVNormals()

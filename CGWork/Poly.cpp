@@ -48,7 +48,10 @@ Poly &Poly::addVertex(const std::shared_ptr<Vertex> &vertex)
 	return *this;
 }
 
-
+void Poly::flipNormal()
+{
+	_fnormal = -_fnormal;
+}
 
 void Poly::SetGivenFaceNormal(double x, double y, double z)
 {

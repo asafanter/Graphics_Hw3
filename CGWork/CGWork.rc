@@ -137,6 +137,11 @@ BEGIN
         MENUITEM "WireFrame",                   ID_DRAWINGMODE_WIREFRAME
         MENUITEM "Solid",                       ID_DRAWINGMODE_SOLID
     END
+    POPUP "NormalsDirection"
+    BEGIN
+        MENUITEM "original",                    ID_NORMALSDIRECTION_REGULAR
+        MENUITEM "flip",                        ID_NORMALSDIRECTION_FLIP
+    END
 END
 
 

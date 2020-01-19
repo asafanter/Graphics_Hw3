@@ -186,6 +186,10 @@ public:
 	afx_msg void OnOptionsActiveMesh();
 	afx_msg void OnDrawingmodeWireframe();
 	afx_msg void OnDrawingmodeSolid();
+	afx_msg void OnNormalsdirectionRegular();
+	afx_msg void OnNormalsdirectionFlip();
+	afx_msg void OnUpdateNormalsdirectionFlip(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp
