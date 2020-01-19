@@ -177,17 +177,17 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	auto pos = p2.pos * weight + p1.pos * (1 - weight);
 	auto normal = p2.normal * weight + p1.normal * (1 - weight);
 
-	if (!_lights.empty())
-	{
-		Vec3 light_pos = { _lights[0].posX,  _lights[0].posY, _lights[0].posZ };
-		Vec3 light_dir = light_pos - pos;
-		light_dir.normalize();
+	//if (!_lights.empty())
+	//{
+	//	Vec3 light_pos = { _lights[0].posX,  _lights[0].posY, _lights[0].posZ };
+	//	Vec3 light_dir = light_pos - pos;
+	//	light_dir.normalize();
 
-		_Id = normal.dot(light_dir);
-	}
+	//	_Id = normal.dot(light_dir);
+	//}
 
 	Vec3 ambient = calcAmbient();
-	Vec3 diffuse = calcDiffuse();
+	Vec3 diffuse = calcDiffuse(pos, normal);
 
 	return { p.x, p.y, depth, vecToColor(diffuse), normal, pos };
 }
@@ -196,19 +196,38 @@ Vec3 ZBuffer::calcAmbient()
 {
 	Vec3 base_color = colorToVec(_base_color);
 	Vec3 ambient = getLightColor(_ambient);
+	Vec3 Ka = base_color.elementMultiply(ambient) / 255.0;
 
-	return base_color.elementMultiply(ambient) / 255.0 * _Ia;
+	return Ka * _Ia;
 }
 
-Vec3 ZBuffer::calcDiffuse() 
+Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 {
 	if (!_lights.empty())
 	{
-		Vec3 base_color = colorToVec(_base_color);
-		Vec3 diffuse = getLightColor(_lights[0]);
+		Vec3 res = {};
+		_Id = 1.0 / _lights.size();
 
-		return base_color.elementMultiply(diffuse) / 255.0 * _Id;
+		for (auto &light : _lights)
+		{
+			Vec3 light_pos = { light.posX,  light.posY, light.posZ };
+			Vec3 light_dir = light_pos - pos;
+			light_dir.normalize();
+
+			double cos_theta = max(normal.dot(light_dir), 0.0);
+
+			Vec3 base_color = colorToVec(_base_color);
+			Vec3 diffuse = getLightColor(_lights[0]);
+
+			Vec3 Kd = base_color.elementMultiply(diffuse) / 255.0;
+
+			res = res + Kd * _Id * cos_theta;
+		}
+
+		return res;
 	}
+
+	return {};
 }
 
 Vec3 ZBuffer::calcSpecular()

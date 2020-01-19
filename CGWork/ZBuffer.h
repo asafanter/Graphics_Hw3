@@ -46,7 +46,7 @@ public: //methods
 	Vec3 colorToVec(const Color &color);
 	Color vecToColor(const Vec3 &vec);
 	Vec3 calcAmbient();
-	Vec3 calcDiffuse();
+	Vec3 calcDiffuse(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcSpecular();
 
 private: //members

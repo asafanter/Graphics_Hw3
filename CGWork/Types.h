@@ -116,4 +116,5 @@ struct Attr
 	double near_plane;
 	LightMethod light_method;
 	DrawingMode drawing_mode;
+	Vec3d view_pos;
 };
