@@ -96,7 +96,7 @@ struct BoundingBox
 	double max_z;
 };
 
-enum LightMethod
+enum Shading
 {
 	FLAT,
 	GOURAUD,
@@ -118,7 +118,7 @@ struct Attr
 	bool bounding_box;
 	Tmatd T;
 	double near_plane;
-	LightMethod light_method;
+	Shading shading;
 	DrawingMode drawing_mode;
 	Vec3d view_pos;
 };

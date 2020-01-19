@@ -6,6 +6,7 @@
 #include "Light.h"
 #include "Types.h"
 #include "Object.h"
+#include "PngWrapper.h"
 
 class ZBuffer
 {
@@ -53,6 +54,7 @@ public: //methods
 	Vec3 calcVertexPos(const Vertex &vertex, const Poly &polygon);
 	void calcCurrPolygonNormal(const Poly &polygon);
 	void calcCurrPolygonPos(const Poly &polygon);
+	void saveImageAsPng(const char* name);
 
 private: //members
 	int *_bits;
@@ -70,5 +72,6 @@ private: //members
 	double _Is;
 	Vec3 _curr_polygon_normal;
 	Vec3 _curr_polygon_pos;
+	PngWrapper _png;
 };
 

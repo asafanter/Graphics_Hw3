@@ -33,12 +33,31 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_Id(1.0),
 	_Is(1.0),
 	_curr_polygon_normal({}),
-	_curr_polygon_pos({})
+	_curr_polygon_pos({}),
+	_png()
 {
 	_z.resize(width * height);
 	_drawn.resize(width * height);
 	setDefaultColor(color);
 	_Ia = 0.2;
+}
+
+void ZBuffer::saveImageAsPng(const char* name)
+{
+	_png.SetWidth(_width);
+	_png.SetHeight(_height);
+	_png.SetFileName(name);
+
+	auto res = _png.InitWritePng();
+
+	for (int i = 0; i < _width * _height; i++)
+	{
+		int x = i % _width;
+		int y = i / _width;
+		_png.SetValue(x, y, _bits[i]);
+	}
+
+	res = _png.WritePng();
 }
 
 ZBuffer &ZBuffer::resize(const uint &width, const uint &height)
@@ -180,9 +199,8 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	auto depth = weight * p2.depth + (1 - weight) * p1.depth;
 	auto normal = p2.normal * weight + p1.normal * (1 - weight);
 	auto pos = p2.pos * weight + p1.pos * (1 - weight);
-	Color color;
 
-	if (_attr.light_method == LightMethod::FLAT)
+	if (_attr.shading == Shading::FLAT)
 	{
 		pos = _curr_polygon_pos;
 	}
@@ -509,6 +527,8 @@ void ZBuffer::draw(const Object &object)
 			}
 		}
 	}
+	auto ch = _png.GetNumChannels();
+	saveImageAsPng("hw3.png");
 }
 
 void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
@@ -525,7 +545,7 @@ void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
 
 Vec3 ZBuffer::calcVertexNormal(const Vertex &vertex, const Poly &polygon)
 {
-	if (_attr.light_method == LightMethod::FLAT)
+	if (_attr.shading == Shading::FLAT)
 	{
 		auto raw_poly_normal = _attr.T * polygon.getCalcFaceNormal().toHomogeneous();
 		raw_poly_normal /= raw_poly_normal(3);
