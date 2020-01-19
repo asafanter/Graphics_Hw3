@@ -8,7 +8,13 @@ ZBuffer::ZBuffer() :
 	_drawn(),
 	_width(0),
 	_height(0),
-	_lights(MAX_LIGHTS)
+	_lights(MAX_LIGHTS),
+	_base_color(),
+	_attr({}),
+	_ambient(),
+	_Ia(0.0),
+	_Id(0.0),
+	_Is(0.0)
 {
 	setDefaultColor(RGB(0, 0, 0));
 }
@@ -16,11 +22,19 @@ ZBuffer::ZBuffer() :
 ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_bits(new int[width * height]),
 	_width(width),
-	_height(height)
+	_height(height),
+	_lights(MAX_LIGHTS),
+	_base_color(),
+	_attr({}),
+	_ambient(),
+	_Ia(0.0),
+	_Id(0.0),
+	_Is(0.0)
 {
 	_z.resize(width * height);
 	_drawn.resize(width * height);
 	setDefaultColor(color);
+	_Ia = 0.2;
 }
 
 ZBuffer &ZBuffer::resize(const uint &width, const uint &height)
@@ -46,19 +60,6 @@ ZBuffer &ZBuffer::set(const Pixel &p)
 	{
 		return *this;
 	}
-
-	//Vec3d light_pos(0.0, 0.0, 1.0);
-	//Vec3d normal(p.normal(0), p.normal(1), p.normal(2));
-	//Vec3d light_dir(light_pos(0) - p.pos(0), light_pos(1) - p.pos(1), light_pos(2) - p.pos(2));
-	//light_dir.normalize();
-
-	//auto test = normal.dot(light_dir);
-
-	//auto r = GetRValue(p.color) * test;
-	//auto g = GetGValue(p.color) * test;
-	//auto b = GetBValue(p.color) * test;
-
-	//Color color(RGB(r, g, b));
 
 	if (!_drawn[pos])
 	{
@@ -150,43 +151,52 @@ int ZBuffer::calcQuarter(const Pixel &p2, const Pixel &p, const double &m)
 	}
 }
 
-Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
+double ZBuffer::calcWeight(const Pixel &p1, const Pixel &p2, const Pixel &p)
 {
 	double line_dist = std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
 	double dist_from_begin = std::sqrt(std::pow(p.x - p1.x, 2) + std::pow(p.y - p1.y, 2));
-	double a = 0.0;
+	double res = 0.0;
 
-	if (p.x == p1.x && p.y == p1.y)
+	if (p.x == p2.x && p.y == p2.y)
 	{
-		a = 0.0;
-	}
-	else if (p.x == p2.x && p.y == p2.y)
-	{
-		a = 1.0;;
+		res = 1.0;;
 	}
 	else
 	{
-		a = dist_from_begin / line_dist;
+		res = dist_from_begin / line_dist;
 	}
 
-	auto depth = a * p2.depth + (1 - a) * p1.depth;
-	auto pos = p2.pos * a + p1.pos * (1 - a);
-	auto normal = p2.normal * a + p1.normal * (1 - a);
+	return res;
+}
 
-	//Vec4d test_light = _attr.T * Vec4d(0.0, 0.0, 1.0, 1.0);
+Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
+{
+	double weight = calcWeight(p1, p2, p);
 
-	//Vec3 light_pos = { test_light(0), test_light(1), test_light(2)};
-	Vec3 light_pos = { 0.0, 0.0, 3.0 };
-	Vec3 light_dir = light_pos - pos;
-	light_dir.normalize();
+	auto depth = weight * p2.depth + (1 - weight) * p1.depth;
+	auto pos = p2.pos * weight + p1.pos * (1 - weight);
+	auto normal = p2.normal * weight + p1.normal * (1 - weight);
 
-	auto test = normal.dot(light_dir);
+	double I = 1;
 
-	auto r = GetRValue(_base_color) * test;
-	auto g = GetGValue(_base_color) * test;
-	auto b = GetBValue(_base_color) * test;
+	if (!_lights.empty())
+	{
+		Vec3 light_pos = { _lights[0].posX,  _lights[0].posY, _lights[0].posZ };
+		Vec3 light_dir = light_pos - pos;
+		light_dir.normalize();
 
-	Color color(RGB(r, g, b));
+		I = normal.dot(light_dir);
+	}
+
+	auto r = GetRValue(_base_color) * I;
+	auto g = GetGValue(_base_color) * I;
+	auto b = GetBValue(_base_color) * I;
+
+	double r1 = static_cast<double>(GetRValue(_base_color)) * _ambient.colorR / 255.0 * _Ia;
+	double g1 = static_cast<double>(GetGValue(_base_color)) * _ambient.colorG / 255.0 * _Ia;
+	double b1 = static_cast<double>(GetBValue(_base_color)) * _ambient.colorB / 255.0 * _Ia;
+
+	Color color(RGB(r1, g1, b1));
 
 	return { p.x, p.y, depth, color, normal, pos };
 }
@@ -312,7 +322,7 @@ Pixel ZBuffer::nextPixelFill(const Pixel &start, const Pixel &target, const Pixe
 
 	if (curr.y == target.y)
 	{
-		return target;
+		curr.x = target.x;
 	}
 
 	return curr;
@@ -342,6 +352,11 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon)
 	{
 		curr1 = to_via == true ? nextPixelFill(start, via, curr1) : nextPixelFill(via, target, curr1);
 		curr2 = nextPixelFill(start, target, curr2);
+
+		if (curr1.x == 638 && curr1.y == 434)
+		{
+			int koko = 7;
+		}
 
 		if (to_via && curr1.y == via.y)
 		{

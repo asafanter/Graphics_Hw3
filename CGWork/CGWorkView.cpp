@@ -630,6 +630,17 @@ void CCGWorkView::OnLightConstants()
 			m_lights[id] = dlg.GetDialogData((LightID)id);
 		}
 		m_ambientLight = dlg.GetDialogData(LIGHT_ID_AMBIENT);
+
+		std::vector<LightParams> lights;
+		for (int i = 0; i < MAX_LIGHT; i++)
+		{
+			if (m_lights[i].enabled)
+			{
+				lights.push_back(m_lights[i]);
+			}
+		}
+		scene.addLights(lights);
+		scene.addAmbient(m_ambientLight);
 	}
 	Invalidate();
 }

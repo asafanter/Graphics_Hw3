@@ -36,8 +36,11 @@ public: //methods
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	void drawPolygonWireFrame(const Poly &polygon);
 	void drawPolygonSolid(const Poly &polygon);
+	void addLights(const std::vector<LightParams> &lights) { _lights = lights; }
+	void addAmbient(const LightParams &ambient) { _ambient = ambient; }
 	void calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
 		const Poly &polygon);
+	double calcWeight(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	void setAttributes(const Attr &attr) { _attr = attr; }
 
 private: //members
@@ -50,5 +53,9 @@ private: //members
 	std::vector<LightParams> _lights;
 	Color _base_color;
 	Attr _attr;
+	LightParams _ambient;
+	double _Ia;
+	double _Id;
+	double _Is;
 };
 

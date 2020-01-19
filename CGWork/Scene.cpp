@@ -12,7 +12,8 @@ Scene::Scene() :
 	_background_color(RGB(0, 0, 0)),
 	_camera({}),
 	_look_at(),
-	_drawing_mode(DrawingMode::SOLID)
+	_drawing_mode(DrawingMode::SOLID),
+	_lights()
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -59,6 +60,9 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 {
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
 		showBoundingBox, Tmatd(), NEAR_PLANE , LightMethod::FLAT, _drawing_mode};
+
+	zbuffer.addLights(_lights);
+	zbuffer.addAmbient(_ambient);
 
 	for (auto &obj : _objs) {
 

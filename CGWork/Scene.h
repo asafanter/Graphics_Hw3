@@ -36,6 +36,8 @@ public:
 	Scene& setVerticesNormalsColor(const COLORREF &color, int Id);
 	Scene& setBoundingBoxColor(const COLORREF &color, int Id);
 	void setDrawingMode(const DrawingMode &drawing_mode) { _drawing_mode = drawing_mode; }
+	void addLights(const std::vector<LightParams> &lights) { _lights = lights; }
+	void addAmbient(const LightParams &ambient) { _ambient = ambient; }
 	void draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVecNormals, bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox) ;
 
 private:
@@ -55,9 +57,8 @@ private:
 	Camera _camera;
 	Tmatd _look_at;
 	DrawingMode _drawing_mode;
-
-
-
+	std::vector<LightParams> _lights;
+	LightParams _ambient;
 };
 
 
