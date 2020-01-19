@@ -177,19 +177,13 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	auto pos = p2.pos * weight + p1.pos * (1 - weight);
 	auto normal = p2.normal * weight + p1.normal * (1 - weight);
 
-	//if (!_lights.empty())
-	//{
-	//	Vec3 light_pos = { _lights[0].posX,  _lights[0].posY, _lights[0].posZ };
-	//	Vec3 light_dir = light_pos - pos;
-	//	light_dir.normalize();
-
-	//	_Id = normal.dot(light_dir);
-	//}
-
 	Vec3 ambient = calcAmbient();
 	Vec3 diffuse = calcDiffuse(pos, normal);
+	Vec3 specular = calcSpecular(pos, normal);
 
-	return { p.x, p.y, depth, vecToColor(diffuse), normal, pos };
+	Color color = vecToColor(ambient + diffuse + specular);
+
+	return { p.x, p.y, depth, color, normal, pos };
 }
 
 Vec3 ZBuffer::calcAmbient()
@@ -206,7 +200,7 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 	if (!_lights.empty())
 	{
 		Vec3 res = {};
-		_Id = 1.0 / _lights.size();
+		_Id = (1.0 - _Ia) / _lights.size() / 2.0;
 
 		for (auto &light : _lights)
 		{
@@ -217,7 +211,7 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 			double cos_theta = max(normal.dot(light_dir), 0.0);
 
 			Vec3 base_color = colorToVec(_base_color);
-			Vec3 diffuse = getLightColor(_lights[0]);
+			Vec3 diffuse = getLightColor(light);
 
 			Vec3 Kd = base_color.elementMultiply(diffuse) / 255.0;
 
@@ -230,8 +224,38 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 	return {};
 }
 
-Vec3 ZBuffer::calcSpecular()
+Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 {
+	if (!_lights.empty())
+	{
+		Vec3 res = {};
+		_Is = (1.0 - _Ia) / _lights.size() / 2.0;
+
+		for (auto &light : _lights)
+		{
+			Vec3 view_pos = { _attr.view_pos(0), _attr.view_pos(1), _attr.view_pos(2) };
+			Vec3 view_dir = view_pos - pos;
+			view_dir.normalize();
+
+			Vec3 light_pos = { light.posX,  light.posY, light.posZ };
+			Vec3 light_dir = light_pos - pos;
+			light_dir.normalize();
+
+			Vec3 reflect = -light_dir - normal * 2 * (-light_dir.dot(normal));
+
+			double cos_theta = max(view_dir.dot(reflect), 0.0);
+
+			Vec3 base_color = colorToVec(_base_color);
+			Vec3 specular = getLightColor(light);
+
+			Vec3 Ks = base_color.elementMultiply(specular) / 255.0;
+
+			res = res + Ks * _Is * std::pow(cos_theta, 100);
+		}
+
+		return res;
+	}
+
 	return {};
 }
 
@@ -469,7 +493,7 @@ Pixel ZBuffer::toPixel(const Vertex &vertex)
 	final_normal.normalize();
 	
 	int x_res = static_cast<uint>((_width / 2.0) * (pos(0) + 1.0));
-	int y_res = static_cast<uint>((_height / 2.0) * (1.0 - pos(1)));
+	int y_res = static_cast<uint>(-(_height / 2.0) * (pos(1) - 1.0));
 
 	return { x_res, y_res, pos(2), vertex.color, final_normal,
 	{pos(0), pos(1), pos(2)} };
