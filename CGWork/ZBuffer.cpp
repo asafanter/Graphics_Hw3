@@ -181,10 +181,27 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	Vec3 diffuse = calcDiffuse(pos, normal);
 	Vec3 specular = calcSpecular(pos, normal);
 
-	//Color color = vecToColor(ambient + diffuse + specular);
-	Color color = vecToColor(diffuse);
+	Color color = vecToColor(ambient + diffuse + specular);
+
+	//Color color = vecToColor(diffuse);
 
 	return { p.x, p.y, depth, color, normal, pos };
+}
+
+Vec3 ZBuffer::calcLightDir(const LightParams &light, const Vec3 &pos)
+{
+	if (light.type == LightType::LIGHT_TYPE_DIRECTIONAL)
+	{
+		return { light.dirX, light.dirY, light.dirZ };
+	}
+	else if (light.type == LightType::LIGHT_TYPE_POINT)
+	{
+		Vec3 light_pos = { light.posX,  light.posY, light.posZ };
+		Vec3 light_dir = light_pos - pos;
+		light_dir.normalize();
+
+		return light_dir;
+	}
 }
 
 Vec3 ZBuffer::calcAmbient()
@@ -205,10 +222,7 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 
 		for (auto &light : _lights)
 		{
-			Vec3 light_pos = { light.posX,  light.posY, light.posZ };
-			Vec3 light_dir = light_pos - pos;
-			light_dir.normalize();
-
+			Vec3 light_dir = calcLightDir(light, pos);
 			double cos_theta = max(normal.dot(light_dir), 0.0);
 
 			Vec3 base_color = colorToVec(_base_color);
@@ -238,11 +252,10 @@ Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 			Vec3 view_dir = view_pos - pos;
 			view_dir.normalize();
 
-			Vec3 light_pos = { light.posX,  light.posY, light.posZ };
-			Vec3 light_dir = light_pos - pos;
-			light_dir.normalize();
+			Vec3 light_dir = calcLightDir(light, pos);
 
 			Vec3 reflect = -light_dir - normal * 2 * (-light_dir.dot(normal));
+			reflect.normalize();
 
 			double cos_theta = max(view_dir.dot(reflect), 0.0);
 
@@ -465,7 +478,7 @@ void ZBuffer::draw(const Object &object)
 		{
 			for (auto &polygon : mesh.getPolygons())
 			{
-				drawPolygonSolid(*polygon);
+				drawPolygonSolid(*polygon);			
 			}
 		}
 	}

@@ -104,6 +104,9 @@ std::vector<std::shared_ptr<Poly>> Poly::createPolygons3Vertices(const Poly &pol
 		polygon2->setColor(polygon.getColor());
 		polygon2->setNormal(polygon.getCalcFaceNormal());
 
+		polygon1->setPos(polygon.getPos());
+		polygon2->setPos(polygon.getPos());
+
 		res.push_back(polygon1);
 		res.push_back(polygon2);
 	}

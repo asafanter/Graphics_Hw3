@@ -22,6 +22,7 @@ public:
 	std::vector<std::shared_ptr<Vertex>> &getVertices() { return _vertices; }
 	Color getColor() const { return _color; }
 	Vec3d getPos() const { return _pos; }
+	void setPos(const Vec3d &new_pos) { _pos = new_pos; }
 	Poly &setColor(const Color &new_color) { _color = new_color; return *this; }
 	Poly &setFacesNormalsColor(const Color &new_color) { _faces_normals_color = new_color; return *this; }
 	~Poly() = default;

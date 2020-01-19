@@ -48,6 +48,7 @@ public: //methods
 	Vec3 calcAmbient();
 	Vec3 calcDiffuse(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcSpecular(const Vec3 &pos, const Vec3 &normal);
+	Vec3 calcLightDir(const LightParams &light, const Vec3 &pos);
 
 private: //members
 	int *_bits;
