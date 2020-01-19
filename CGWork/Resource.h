@@ -84,13 +84,14 @@
 #define ID_NORMALSDIRECTION_REGULAR     32822
 #define ID_NORMALSDIRECTION_FLIP        32823
 #define ID_SHADING_PHONG                32824
+#define ID_FILE_SAVE32825               32825
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        150
-#define _APS_NEXT_COMMAND_VALUE         32825
+#define _APS_NEXT_COMMAND_VALUE         32826
 #define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

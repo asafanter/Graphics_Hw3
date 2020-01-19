@@ -73,6 +73,7 @@ private:
 	PerspectiveDialog _perspective_dialog;
 	PolygonDialog _polygon_dialog;
 	ActiveMeshDialog  _active_mesh_dialog;
+	bool _need_save = false;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -190,6 +191,7 @@ public:
 	afx_msg void OnNormalsdirectionFlip();
 	afx_msg void OnUpdateNormalsdirectionFlip(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI);
+	afx_msg void OnFileSave32825();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

@@ -28,7 +28,6 @@ public:
 	Scene &setProjection(const Tmatd &projection) { _projection = projection; return *this; }
 	Scene &reset();
 	void flipNormals();
-	void setBuffer(const int &w, const int &h);
 
 	COLORREF getBackgroundColor() const { return _background_color; }
 	Scene& setBackgroundColor(const COLORREF &color) { _background_color = color; return *this; }

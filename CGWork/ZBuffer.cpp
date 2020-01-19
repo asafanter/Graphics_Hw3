@@ -527,8 +527,6 @@ void ZBuffer::draw(const Object &object)
 			}
 		}
 	}
-	auto ch = _png.GetNumChannels();
-	saveImageAsPng("hw3.png");
 }
 
 void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)

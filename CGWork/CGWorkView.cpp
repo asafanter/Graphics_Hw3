@@ -126,6 +126,7 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_COMMAND(ID_NORMALSDIRECTION_FLIP, &CCGWorkView::OnNormalsdirectionFlip)
 	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_FLIP, &CCGWorkView::OnUpdateNormalsdirectionFlip)
 	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_REGULAR, &CCGWorkView::OnUpdateNormalsdirectionRegular)
+	ON_COMMAND(ID_FILE_SAVE32825, &CCGWorkView::OnFileSave32825)
 END_MESSAGE_MAP()
 
 
@@ -352,6 +353,11 @@ void CCGWorkView::OnDraw(CDC* pDC)
 	SetDIBits(*pDCToUse, bm, 0, h, zbuffer.getBits(), &bminfo, 0);
 	m_pDC->BitBlt(r.left, r.top, r.Width(), r.Height(), pDCToUse, r.left, r.top, SRCCOPY);
 
+	if (_need_save)
+	{
+		zbuffer.saveImageAsPng("hw3.png");
+		_need_save = false;
+	}
 
 	DeleteObject(bm);
 }
@@ -1083,4 +1089,10 @@ void CCGWorkView::OnUpdateNormalsdirectionFlip(CCmdUI *pCmdUI)
 void CCGWorkView::OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(!scene.isNormalsFliped());
+}
+
+
+void CCGWorkView::OnFileSave32825()
+{
+	_need_save = true;
 }

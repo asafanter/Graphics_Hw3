@@ -35,11 +35,6 @@ void Scene::flipNormals()
 	}
 }
 
-void Scene::setBuffer(const int &w, const int &h)
-{
-
-}
-
 Scene &Scene::reset()
 {
 	_objs.clear();
