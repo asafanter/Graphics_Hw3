@@ -127,6 +127,8 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_FLIP, &CCGWorkView::OnUpdateNormalsdirectionFlip)
 	ON_UPDATE_COMMAND_UI(ID_NORMALSDIRECTION_REGULAR, &CCGWorkView::OnUpdateNormalsdirectionRegular)
 	ON_COMMAND(ID_FILE_SAVE32825, &CCGWorkView::OnFileSave32825)
+	ON_COMMAND(ID_SHADING_PHONG, &CCGWorkView::OnShadingPhong)
+	ON_UPDATE_COMMAND_UI(ID_SHADING_PHONG, &CCGWorkView::OnUpdateShadingPhong)
 END_MESSAGE_MAP()
 
 
@@ -603,6 +605,7 @@ void CCGWorkView::OnUpdateShowBoundingBox(CCmdUI * pCmdUI)
 void CCGWorkView::OnLightShadingFlat()
 {
 	m_nLightShading = ID_LIGHT_SHADING_FLAT;
+	scene.setShading(Shading::FLAT);
 }
 
 void CCGWorkView::OnUpdateLightShadingFlat(CCmdUI* pCmdUI)
@@ -614,6 +617,7 @@ void CCGWorkView::OnUpdateLightShadingFlat(CCmdUI* pCmdUI)
 void CCGWorkView::OnLightShadingGouraud()
 {
 	m_nLightShading = ID_LIGHT_SHADING_GOURAUD;
+	scene.setShading(Shading::GOURAUD);
 }
 
 void CCGWorkView::OnUpdateLightShadingGouraud(CCmdUI* pCmdUI)
@@ -1095,4 +1099,17 @@ void CCGWorkView::OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI)
 void CCGWorkView::OnFileSave32825()
 {
 	_need_save = true;
+}
+
+
+void CCGWorkView::OnShadingPhong()
+{
+	m_nLightShading = ID_SHADING_PHONG;
+	scene.setShading(Shading::PHONG);
+}
+
+
+void CCGWorkView::OnUpdateShadingPhong(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_nLightShading == ID_SHADING_PHONG);
 }

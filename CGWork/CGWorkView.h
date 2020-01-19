@@ -192,6 +192,8 @@ public:
 	afx_msg void OnUpdateNormalsdirectionFlip(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateNormalsdirectionRegular(CCmdUI *pCmdUI);
 	afx_msg void OnFileSave32825();
+	afx_msg void OnShadingPhong();
+	afx_msg void OnUpdateShadingPhong(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

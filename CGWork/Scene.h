@@ -27,6 +27,7 @@ public:
 	bool isInitialized() const { return _is_initialized; }
 	Scene &setProjection(const Tmatd &projection) { _projection = projection; return *this; }
 	Scene &reset();
+	void setShading(const Shading &new_shading) { _shading = new_shading; }
 	void flipNormals();
 
 	COLORREF getBackgroundColor() const { return _background_color; }
@@ -62,7 +63,7 @@ private:
 	std::vector<LightParams> _lights;
 	LightParams _ambient;
 	bool _is_normals_fliped;
-	ZBuffer _zbuffer;
+	Shading _shading;
 };
 
 

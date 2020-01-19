@@ -14,7 +14,9 @@ Scene::Scene() :
 	_look_at(),
 	_drawing_mode(DrawingMode::SOLID),
 	_lights(),
-	_is_normals_fliped(false)
+	_ambient(),
+	_is_normals_fliped(false),
+	_shading(Shading::PHONG)
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	//_projection = TransformationMatrix<double>::ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
@@ -71,7 +73,7 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox)
 {
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
-		showBoundingBox, Tmatd(), NEAR_PLANE , Shading::PHONG, _drawing_mode,
+		showBoundingBox, Tmatd(), NEAR_PLANE , _shading, _drawing_mode,
 	_camera.pos};
 
 	zbuffer.setLights(_lights);
