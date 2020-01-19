@@ -71,7 +71,7 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox)
 {
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
-		showBoundingBox, Tmatd(), NEAR_PLANE , LightMethod::FLAT, _drawing_mode,
+		showBoundingBox, Tmatd(), NEAR_PLANE , LightMethod::PHONG, _drawing_mode,
 	_camera.pos};
 
 	zbuffer.setLights(_lights);

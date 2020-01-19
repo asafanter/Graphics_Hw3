@@ -32,7 +32,7 @@ public: //methods
 	Pixel nextPixelFill(const Pixel &start, const Pixel &target, const Pixel &p);
 	int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);
 	void drawLine(const Pixel &p1, const Pixel &p2);
-	Pixel toPixel(const Vertex &vertex);
+	Pixel toPixel(const Vertex &vertex, const Poly &polygon);
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	void drawPolygonWireFrame(const Poly &polygon);
 	void drawPolygonSolid(const Poly &polygon);
@@ -49,6 +49,10 @@ public: //methods
 	Vec3 calcDiffuse(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcSpecular(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcLightDir(const LightParams &light, const Vec3 &pos);
+	Vec3 calcVertexNormal(const Vertex &vertex, const Poly &polygon);
+	Vec3 calcVertexPos(const Vertex &vertex, const Poly &polygon);
+	void calcCurrPolygonNormal(const Poly &polygon);
+	void calcCurrPolygonPos(const Poly &polygon);
 
 private: //members
 	int *_bits;
@@ -64,5 +68,7 @@ private: //members
 	double _Ia;
 	double _Id;
 	double _Is;
+	Vec3 _curr_polygon_normal;
+	Vec3 _curr_polygon_pos;
 };
 
