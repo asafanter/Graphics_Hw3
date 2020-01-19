@@ -40,9 +40,17 @@ struct Vec3
 	{
 		return { x * scalar, y * scalar, z * scalar };
 	}
+	Vec3 operator/(const double &scalar)
+	{
+		return { x / scalar, y / scalar, z / scalar };
+	}
 	double dot(const Vec3 &other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
+	}
+	Vec3 elementMultiply(const Vec3 &other)
+	{
+		return { x * other.x, y * other.y, z * other.z };
 	}
 };
 

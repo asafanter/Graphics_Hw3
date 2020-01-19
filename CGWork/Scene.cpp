@@ -61,8 +61,8 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
 		showBoundingBox, Tmatd(), NEAR_PLANE , LightMethod::FLAT, _drawing_mode};
 
-	zbuffer.addLights(_lights);
-	zbuffer.addAmbient(_ambient);
+	zbuffer.setLights(_lights);
+	zbuffer.setAmbient(_ambient);
 
 	for (auto &obj : _objs) {
 

@@ -12,9 +12,9 @@ ZBuffer::ZBuffer() :
 	_base_color(),
 	_attr({}),
 	_ambient(),
-	_Ia(0.0),
-	_Id(0.0),
-	_Is(0.0)
+	_Ia(1.0),
+	_Id(1.0),
+	_Is(1.0)
 {
 	setDefaultColor(RGB(0, 0, 0));
 }
@@ -27,9 +27,9 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_base_color(),
 	_attr({}),
 	_ambient(),
-	_Ia(0.0),
-	_Id(0.0),
-	_Is(0.0)
+	_Ia(1.0),
+	_Id(1.0),
+	_Is(1.0)
 {
 	_z.resize(width * height);
 	_drawn.resize(width * height);
@@ -159,7 +159,7 @@ double ZBuffer::calcWeight(const Pixel &p1, const Pixel &p2, const Pixel &p)
 
 	if (p.x == p2.x && p.y == p2.y)
 	{
-		res = 1.0;;
+		res = std::abs(p.depth - p2.depth) < 1e-3 ? 1.0 : 0.0;
 	}
 	else
 	{
@@ -177,28 +177,62 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	auto pos = p2.pos * weight + p1.pos * (1 - weight);
 	auto normal = p2.normal * weight + p1.normal * (1 - weight);
 
-	double I = 1;
-
 	if (!_lights.empty())
 	{
 		Vec3 light_pos = { _lights[0].posX,  _lights[0].posY, _lights[0].posZ };
 		Vec3 light_dir = light_pos - pos;
 		light_dir.normalize();
 
-		I = normal.dot(light_dir);
+		_Id = normal.dot(light_dir);
 	}
 
-	auto r = GetRValue(_base_color) * I;
-	auto g = GetGValue(_base_color) * I;
-	auto b = GetBValue(_base_color) * I;
+	Vec3 ambient = calcAmbient();
+	Vec3 diffuse = calcDiffuse();
 
-	double r1 = static_cast<double>(GetRValue(_base_color)) * _ambient.colorR / 255.0 * _Ia;
-	double g1 = static_cast<double>(GetGValue(_base_color)) * _ambient.colorG / 255.0 * _Ia;
-	double b1 = static_cast<double>(GetBValue(_base_color)) * _ambient.colorB / 255.0 * _Ia;
+	return { p.x, p.y, depth, vecToColor(diffuse), normal, pos };
+}
 
-	Color color(RGB(r1, g1, b1));
+Vec3 ZBuffer::calcAmbient()
+{
+	Vec3 base_color = colorToVec(_base_color);
+	Vec3 ambient = getLightColor(_ambient);
 
-	return { p.x, p.y, depth, color, normal, pos };
+	return base_color.elementMultiply(ambient) / 255.0 * _Ia;
+}
+
+Vec3 ZBuffer::calcDiffuse() 
+{
+	if (!_lights.empty())
+	{
+		Vec3 base_color = colorToVec(_base_color);
+		Vec3 diffuse = getLightColor(_lights[0]);
+
+		return base_color.elementMultiply(diffuse) / 255.0 * _Id;
+	}
+}
+
+Vec3 ZBuffer::calcSpecular()
+{
+	return {};
+}
+
+Color ZBuffer::vecToColor(const Vec3 &vec)
+{
+	return RGB(vec.x, vec.y, vec.z);
+}
+
+Vec3 ZBuffer::colorToVec(const Color &color)
+{
+	return { static_cast<double>(GetRValue(color)),
+		static_cast<double>(GetGValue(color)),
+		static_cast<double>(GetBValue(color)) };
+}
+
+Vec3 ZBuffer::getLightColor(const LightParams &light) const
+{
+	return { static_cast<double>(light.colorR),
+	static_cast<double>(light.colorG),
+	static_cast<double>(light.colorB) };
 }
 
 Pixel ZBuffer::nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
@@ -353,7 +387,7 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon)
 		curr1 = to_via == true ? nextPixelFill(start, via, curr1) : nextPixelFill(via, target, curr1);
 		curr2 = nextPixelFill(start, target, curr2);
 
-		if (curr1.x == 638 && curr1.y == 434)
+		if (curr1.y == 312)
 		{
 			int koko = 7;
 		}
