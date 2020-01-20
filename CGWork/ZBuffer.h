@@ -29,6 +29,7 @@ private: //defs
 
 public: //methods
 	Color RGBToBGR(COLORREF col);
+	Color BGRToRGB(COLORREF col);
 	Pixel nextPixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	Pixel nextPixelFill(const Pixel &start, const Pixel &target, const Pixel &p);
 	int calcQuarter(const Pixel &p2, const Pixel &p, const double &m);

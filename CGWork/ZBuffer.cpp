@@ -53,8 +53,15 @@ void ZBuffer::saveImageAsPng(const char* name)
 	for (int i = 0; i < _width * _height; i++)
 	{
 		int x = i % _width;
-		int y = i / _width;
-		_png.SetValue(x, y, _bits[i]);
+		int y = _height - 1 - i / _width;
+
+		int r = GetRValue(_bits[i]);
+		int g = GetGValue(_bits[i]);
+		int b = GetBValue(_bits[i]);
+
+		Color color = SET_RGB(b,g,r);
+
+		_png.SetValue(x, y, color);
 	}
 
 	res = _png.WritePng();
@@ -104,6 +111,11 @@ ZBuffer &ZBuffer::set(const Pixel &p)
 }
 
 Color ZBuffer::RGBToBGR(COLORREF col)
+{
+	return RGB(GetBValue(col), GetGValue(col), GetRValue(col));
+}
+
+Color ZBuffer::BGRToRGB(COLORREF col)
 {
 	return RGB(GetBValue(col), GetGValue(col), GetRValue(col));
 }
