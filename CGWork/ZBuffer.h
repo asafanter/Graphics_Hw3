@@ -51,8 +51,8 @@ public: //methods
 	Vec3 calcDiffuse(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcSpecular(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcLightDir(const LightParams &light, const Vec3 &pos);
-	Vec3 calcVertexNormal(const Vertex &vertex, const Poly &polygon);
-	Vec3 calcVertexPos(const Vertex &vertex, const Poly &polygon);
+	Vec3 calcVertexNormal(const Vertex &vertex);
+	Vec3 calcVertexPos(const Vertex &vertex);
 	void calcCurrPolygonNormal(const Poly &polygon);
 	void calcCurrPolygonPos(const Poly &polygon);
 	void saveImageAsPng(const char* name);

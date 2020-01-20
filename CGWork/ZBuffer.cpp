@@ -459,8 +459,11 @@ Pixel ZBuffer::nextPixelFill(const Pixel &start, const Pixel &target, const Pixe
 
 void ZBuffer::calcCurrPolygonNormal(const Poly &polygon)
 {
-	auto polygon_normal = _attr.T * polygon.getCalcFaceNormal().toHomogeneous();
-	polygon_normal /= polygon_normal(3);
+	auto raw_polygon_normal = polygon.getCalcFaceNormal().toHomogeneous();
+	raw_polygon_normal(3) = 0.0;
+
+	auto polygon_normal = _attr.T * raw_polygon_normal;
+
 	_curr_polygon_normal = { polygon_normal(0), polygon_normal(1), polygon_normal(2) };
 	_curr_polygon_normal.normalize();
 }
@@ -553,30 +556,27 @@ void ZBuffer::drawLine(const Pixel &p1, const Pixel &p2)
 	}
 }
 
-Vec3 ZBuffer::calcVertexNormal(const Vertex &vertex, const Poly &polygon)
+Vec3 ZBuffer::calcVertexNormal(const Vertex &vertex)
 {
 	if (_attr.shading == Shading::FLAT)
 	{
-		auto raw_poly_normal = _attr.T * polygon.getCalcFaceNormal().toHomogeneous();
-		raw_poly_normal /= raw_poly_normal(3);
-
-		Vec3 normal = { raw_poly_normal(0), raw_poly_normal(1), raw_poly_normal(2) };
-
-		return normal.normalize();
+		return _curr_polygon_normal;
 	}
 
 	else
 	{
-		auto raw_normal = _attr.T * vertex.calc_normal.toHomogeneous();
-		raw_normal /= raw_normal(3);
+		auto raw_normal = vertex.calc_normal.toHomogeneous();
+		raw_normal(3) = 0.0;
 
-		Vec3 normal = { raw_normal(0), raw_normal(1), raw_normal(2) };
+		auto T_normal = _attr.T * raw_normal;
+
+		Vec3 normal = { T_normal(0), T_normal(1), T_normal(2) };
 
 		return normal.normalize();
 	}
 }
 
-Vec3 ZBuffer::calcVertexPos(const Vertex &vertex, const Poly &polygon)
+Vec3 ZBuffer::calcVertexPos(const Vertex &vertex)
 {
 	auto raw_pos = _attr.T * vertex.pos.toHomogeneous();
 	raw_pos /= raw_pos(3);
@@ -586,8 +586,8 @@ Vec3 ZBuffer::calcVertexPos(const Vertex &vertex, const Poly &polygon)
 
 Pixel ZBuffer::toPixel(const Vertex &vertex, const Poly &polygon)
 {
-	auto pos = calcVertexPos(vertex, polygon);
-	auto normal = calcVertexNormal(vertex, polygon);
+	auto pos = calcVertexPos(vertex);
+	auto normal = calcVertexNormal(vertex);
 	
 	int x_res = static_cast<uint>((_width / 2.0) * (pos.x + 1.0));
 	int y_res = static_cast<uint>(-(_height / 2.0) * (pos.y - 1.0));
