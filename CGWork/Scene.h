@@ -31,6 +31,7 @@ public:
 	void flipNormals();
 
 	COLORREF getBackgroundColor() const { return _background_color; }
+	bool getBackFaceCulling() const { return _back_face_culling; }
 	DrawingMode getDrawingMode() const { return _drawing_mode; }
 	Scene& setBackgroundColor(const COLORREF &color) { _background_color = color; return *this; }
 
@@ -38,6 +39,7 @@ public:
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
 	Scene& setVerticesNormalsColor(const COLORREF &color, int Id);
 	Scene& setBoundingBoxColor(const COLORREF &color, int Id);
+	void setBackFaceCulling(const bool &val) { _back_face_culling = val; }
 	bool isNormalsFliped() const { return _is_normals_fliped; }
 	void setDrawingMode(const DrawingMode &drawing_mode) { _drawing_mode = drawing_mode; }
 	void addLights(const std::vector<LightParams> &lights) { _lights = lights; }
@@ -65,6 +67,7 @@ private:
 	LightParams _ambient;
 	bool _is_normals_fliped;
 	Shading _shading;
+	bool _back_face_culling;
 };
 
 

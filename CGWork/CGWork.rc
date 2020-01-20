@@ -144,6 +144,11 @@ BEGIN
         MENUITEM "original",                    ID_NORMALSDIRECTION_REGULAR
         MENUITEM "flip",                        ID_NORMALSDIRECTION_FLIP
     END
+    POPUP "back face"
+    BEGIN
+        MENUITEM "on",                          ID_BACKFACE_ON
+        MENUITEM "off",                         ID_BACKFACE_OFF
+    END
 END
 
 

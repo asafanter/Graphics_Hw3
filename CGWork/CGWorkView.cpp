@@ -131,6 +131,10 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_UPDATE_COMMAND_UI(ID_SHADING_PHONG, &CCGWorkView::OnUpdateShadingPhong)
 	ON_UPDATE_COMMAND_UI(ID_DRAWINGMODE_WIREFRAME, &CCGWorkView::OnUpdateDrawingmodeWireframe)
 	ON_UPDATE_COMMAND_UI(ID_DRAWINGMODE_SOLID, &CCGWorkView::OnUpdateDrawingmodeSolid)
+	ON_COMMAND(ID_BACKFACE_ON, &CCGWorkView::OnBackfaceOn)
+	ON_COMMAND(ID_BACKFACE_OFF, &CCGWorkView::OnBackfaceOff)
+	ON_UPDATE_COMMAND_UI(ID_BACKFACE_ON, &CCGWorkView::OnUpdateBackfaceOn)
+	ON_UPDATE_COMMAND_UI(ID_BACKFACE_OFF, &CCGWorkView::OnUpdateBackfaceOff)
 END_MESSAGE_MAP()
 
 
@@ -1126,4 +1130,26 @@ void CCGWorkView::OnUpdateDrawingmodeWireframe(CCmdUI *pCmdUI)
 void CCGWorkView::OnUpdateDrawingmodeSolid(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(scene.getDrawingMode() == DrawingMode::SOLID);
+}
+
+void CCGWorkView::OnBackfaceOn()
+{
+	scene.setBackFaceCulling(true);
+}
+
+void CCGWorkView::OnBackfaceOff()
+{
+	scene.setBackFaceCulling(false);
+}
+
+
+void CCGWorkView::OnUpdateBackfaceOn(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getBackFaceCulling());
+}
+
+
+void CCGWorkView::OnUpdateBackfaceOff(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(!scene.getBackFaceCulling());
 }

@@ -196,6 +196,10 @@ public:
 	afx_msg void OnUpdateShadingPhong(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateDrawingmodeWireframe(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateDrawingmodeSolid(CCmdUI *pCmdUI);
+	afx_msg void OnBackfaceOn();
+	afx_msg void OnBackfaceOff();
+	afx_msg void OnUpdateBackfaceOn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateBackfaceOff(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

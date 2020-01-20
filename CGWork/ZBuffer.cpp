@@ -479,9 +479,6 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon)
 {
 	_base_color = polygon.getColor();
 
-	calcCurrPolygonNormal(polygon);
-	calcCurrPolygonPos(polygon);
-
 	Pixel start = {};
 	Pixel via = {};
 	Pixel target = {};
@@ -538,15 +535,19 @@ void ZBuffer::draw(const Object &object)
 		{
 			for (auto &polygon : mesh.getPolygons())
 			{
-				//calcCurrPolygonNormal(*polygon);
-				//calcCurrPolygonPos(*polygon);
-
-				//if (_curr_polygon_normal.dot(Vec3{ 0.0, 0.0, -1.0 }) < 0)
-				//{
+				calcCurrPolygonNormal(*polygon);
+				calcCurrPolygonPos(*polygon);
+				if (_attr.back_face_culling)
+				{
+					if (_curr_polygon_normal.dot(Vec3{ 0.0, 0.0, -1.0 }) < 0)
+					{
+						drawPolygonSolid(*polygon);
+					}
+				}
+				else
+				{
 					drawPolygonSolid(*polygon);
-				//}
-
-						
+				}
 			}
 		}
 	}

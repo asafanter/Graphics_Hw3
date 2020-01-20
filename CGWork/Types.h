@@ -121,4 +121,5 @@ struct Attr
 	Shading shading;
 	DrawingMode drawing_mode;
 	Vec3d view_pos;
+	bool back_face_culling;
 };

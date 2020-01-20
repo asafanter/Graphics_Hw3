@@ -16,10 +16,10 @@ Scene::Scene() :
 	_lights(),
 	_ambient(),
 	_is_normals_fliped(false),
-	_shading(Shading::PHONG)
+	_shading(Shading::PHONG),
+	_back_face_culling(false)
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
-	//_projection = TransformationMatrix<double>::ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
 	_camera.front = Vec3d(0.0, 0.0, -1.0);
 	_camera.up = Vec3d(0.0, 1.0, 0.0);
@@ -74,7 +74,7 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 {
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
 		showBoundingBox, Tmatd(), NEAR_PLANE , _shading, _drawing_mode,
-	_camera.pos};
+	_camera.pos, _back_face_culling};
 
 	zbuffer.setLights(_lights);
 	zbuffer.setAmbient(_ambient);
