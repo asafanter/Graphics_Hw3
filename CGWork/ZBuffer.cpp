@@ -538,7 +538,15 @@ void ZBuffer::draw(const Object &object)
 		{
 			for (auto &polygon : mesh.getPolygons())
 			{
-				drawPolygonSolid(*polygon);			
+				//calcCurrPolygonNormal(*polygon);
+				//calcCurrPolygonPos(*polygon);
+
+				//if (_curr_polygon_normal.dot(Vec3{ 0.0, 0.0, -1.0 }) < 0)
+				//{
+					drawPolygonSolid(*polygon);
+				//}
+
+						
 			}
 		}
 	}

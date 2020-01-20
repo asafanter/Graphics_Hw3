@@ -31,6 +31,7 @@ public:
 	void flipNormals();
 
 	COLORREF getBackgroundColor() const { return _background_color; }
+	DrawingMode getDrawingMode() const { return _drawing_mode; }
 	Scene& setBackgroundColor(const COLORREF &color) { _background_color = color; return *this; }
 
 	Scene& setWireFrameColor(const COLORREF &color, int Id);

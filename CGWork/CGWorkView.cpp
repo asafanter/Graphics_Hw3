@@ -129,6 +129,8 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_COMMAND(ID_FILE_SAVE32825, &CCGWorkView::OnFileSave32825)
 	ON_COMMAND(ID_SHADING_PHONG, &CCGWorkView::OnShadingPhong)
 	ON_UPDATE_COMMAND_UI(ID_SHADING_PHONG, &CCGWorkView::OnUpdateShadingPhong)
+	ON_UPDATE_COMMAND_UI(ID_DRAWINGMODE_WIREFRAME, &CCGWorkView::OnUpdateDrawingmodeWireframe)
+	ON_UPDATE_COMMAND_UI(ID_DRAWINGMODE_SOLID, &CCGWorkView::OnUpdateDrawingmodeSolid)
 END_MESSAGE_MAP()
 
 
@@ -1112,4 +1114,16 @@ void CCGWorkView::OnShadingPhong()
 void CCGWorkView::OnUpdateShadingPhong(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nLightShading == ID_SHADING_PHONG);
+}
+
+
+void CCGWorkView::OnUpdateDrawingmodeWireframe(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getDrawingMode() == DrawingMode::WIRE_FRAME);
+}
+
+
+void CCGWorkView::OnUpdateDrawingmodeSolid(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getDrawingMode() == DrawingMode::SOLID);
 }
