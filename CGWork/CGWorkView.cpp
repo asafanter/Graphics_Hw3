@@ -338,7 +338,6 @@ void CCGWorkView::OnDraw(CDC* pDC)
 	auto w = r.Width();
 	auto h = r.Height();
 
-
 	HBITMAP bm = CreateCompatibleBitmap(*pDCToUse, w, h);
 	SelectObject(*pDCToUse, bm);
 	BITMAPINFO bminfo;
