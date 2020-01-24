@@ -192,9 +192,10 @@ double ZBuffer::calcWeight(const Pixel &p1, const Pixel &p2, const Pixel &p)
 	double dist_from_begin = std::sqrt(std::pow(p.x - p1.x, 2) + std::pow(p.y - p1.y, 2));
 	double res = 0.0;
 
-	if (p.x == p2.x && p.y == p2.y)
+	if (line_dist == 0.0)
 	{
-		res = std::abs(p.depth - p2.depth) < 1e-3 ? 1.0 : 0.0;
+		//res = std::abs(p.depth - p2.depth) < 1e-3 ? 1.0 : 0.0;
+		res = 0.0;
 	}
 	else
 	{
