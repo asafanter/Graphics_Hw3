@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <cmath>
+#include "Matrices.h"
 
 #include "ZBuffer.h"
 
@@ -222,6 +224,25 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	Vec3 diffuse = calcDiffuse(pos, normal);
 	Vec3 specular = calcSpecular(pos, normal);
 
+	//Vec3 light_dir = { 0.1, -0.4, -0.4 };
+	//light_dir.normalize();
+	//Vec3 light_pos = { 0, 0, 1 };
+	//auto angle = 7.0 * consts::PI / 180.0;
+
+	//auto res = acos(light_dir.dot((pos - light_pos).normalize()));
+
+	//Color color;
+
+	//if (res >= 0 && res <= angle)
+	//{
+	//	
+	//	color = RGB(150, 0, 0);
+	//}
+	//else
+	//{
+	//	color = color = vecToColor(ambient);
+	//}
+
 	Color color = vecToColor(ambient + diffuse + specular);
 
 	return { p.x, p.y, depth, color, normal, pos };
@@ -261,15 +282,18 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 
 		for (auto &light : _lights)
 		{
-			Vec3 light_dir = calcLightDir(light, pos);
-			double cos_theta = max(normal.dot(light_dir), 0.0);
+			if (light.type != LIGHT_TYPE_SPOT)
+			{
+				Vec3 light_dir = calcLightDir(light, pos);
+				double cos_theta = max(normal.dot(light_dir), 0.0);
 
-			Vec3 base_color = colorToVec(_base_color);
-			Vec3 diffuse = getLightColor(light);
+				Vec3 base_color = colorToVec(_base_color);
+				Vec3 diffuse = getLightColor(light);
 
-			Vec3 Kd = base_color.elementMultiply(diffuse) / 255.0;
+				Vec3 Kd = base_color.elementMultiply(diffuse) / 255.0;
 
-			res = res + Kd * _Id * cos_theta;
+				res = res + Kd * _Id * cos_theta;
+			}
 		}
 
 		return res;
@@ -287,23 +311,26 @@ Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 
 		for (auto &light : _lights)
 		{
-			Vec3 view_pos = { _attr.view_pos(0), _attr.view_pos(1), _attr.view_pos(2) };
-			Vec3 view_dir = view_pos - pos;
-			view_dir.normalize();
+			if (light.type != LIGHT_TYPE_SPOT)
+			{
+				Vec3 view_pos = { _attr.view_pos(0), _attr.view_pos(1), _attr.view_pos(2) };
+				Vec3 view_dir = view_pos - pos;
+				view_dir.normalize();
 
-			Vec3 light_dir = calcLightDir(light, pos);
+				Vec3 light_dir = calcLightDir(light, pos);
 
-			Vec3 reflect = -light_dir - normal * 2 * (-light_dir.dot(normal));
-			reflect.normalize();
+				Vec3 reflect = -light_dir - normal * 2 * (-light_dir.dot(normal));
+				reflect.normalize();
 
-			double cos_theta = max(view_dir.dot(reflect), 0.0);
+				double cos_theta = max(view_dir.dot(reflect), 0.0);
 
-			Vec3 base_color = colorToVec(_base_color);
-			Vec3 specular = getLightColor(light);
+				Vec3 base_color = colorToVec(_base_color);
+				Vec3 specular = getLightColor(light);
 
-			Vec3 Ks = base_color.elementMultiply(specular) / 255.0;
+				Vec3 Ks = base_color.elementMultiply(specular) / 255.0;
 
-			res = res + Ks * _Is * std::pow(cos_theta, 100);
+				res = res + Ks * _Is * std::pow(cos_theta, 100);
+			}
 		}
 
 		return res;
