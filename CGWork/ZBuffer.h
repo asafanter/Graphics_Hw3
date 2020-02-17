@@ -73,6 +73,7 @@ private: //members
 	double _Ia;
 	double _Id;
 	double _Is;
+	double _Ispot;
 	Vec3 _curr_polygon_normal;
 	Vec3 _curr_polygon_pos;
 	PngWrapper _png;

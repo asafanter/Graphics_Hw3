@@ -17,6 +17,7 @@ ZBuffer::ZBuffer() :
 	_Ia(1.0),
 	_Id(1.0),
 	_Is(1.0),
+	_Ispot(1.0),
 	_curr_polygon_normal({}),
 	_curr_polygon_pos({})
 {
@@ -34,6 +35,7 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_Ia(1.0),
 	_Id(1.0),
 	_Is(1.0),
+	_Ispot(1.0),
 	_curr_polygon_normal({}),
 	_curr_polygon_pos({}),
 	_png()
@@ -249,7 +251,8 @@ Vec3 ZBuffer::calcSpotLight(const Vec3 &pos)
 			if (res >= 0 && res <= angle)
 			{
 				auto base_color = colorToVec(_base_color);
-				return base_color * 3;
+				auto k_spot = base_color.elementMultiply(light_color) / 255.0;
+				return k_spot * _Ispot;
 			}
 		}
 	}
@@ -356,8 +359,36 @@ void ZBuffer::allocateLightsIntensities()
 {
 	if (!_lights.empty())
 	{
-		_Is = (1.0 - _Ia) / _lights.size() / 2.0;
-		_Id = (1.0 - _Ia) / _lights.size() / 2.0;
+		int spot_lights_count = 0;
+
+		for (auto &light : _lights)
+		{
+			if (light.type == LIGHT_TYPE_SPOT)
+			{
+				spot_lights_count++;
+			}
+		}
+
+		int non_spot_light_count = _lights.size() - spot_lights_count;
+
+		if (spot_lights_count == _lights.size())
+		{
+			_Is = 0;
+			_Id = 0;
+			_Ispot = (1.0 - _Ia) / spot_lights_count;
+		}
+		else if (non_spot_light_count == _lights.size())
+		{
+			_Is = (1.0 - _Ia) / _lights.size() / 2.0;
+			_Id = (1.0 - _Ia) / _lights.size() / 2.0;
+			_Ispot = 0;
+		}
+		else
+		{
+			_Is = (1.0 - _Ia) / _lights.size() / 2.0;
+			_Id = (1.0 - _Ia) / _lights.size() / 2.0;
+			_Ispot = 1 - _Ia - (1 - _Ia) / _lights.size();
+		}
 	}
 }
 
