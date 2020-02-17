@@ -223,29 +223,38 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	Vec3 ambient = calcAmbient();
 	Vec3 diffuse = calcDiffuse(pos, normal);
 	Vec3 specular = calcSpecular(pos, normal);
+	Vec3 spot_light = calcSpotLight(pos);
 
-	//Vec3 light_dir = { 0.1, -0.4, -0.4 };
-	//light_dir.normalize();
-	//Vec3 light_pos = { 0, 0, 1 };
-	//auto angle = 7.0 * consts::PI / 180.0;
-
-	//auto res = acos(light_dir.dot((pos - light_pos).normalize()));
-
-	//Color color;
-
-	//if (res >= 0 && res <= angle)
-	//{
-	//	
-	//	color = RGB(150, 0, 0);
-	//}
-	//else
-	//{
-	//	color = color = vecToColor(ambient);
-	//}
-
-	Color color = vecToColor(ambient + diffuse + specular);
-
+	Color color = vecToColor(ambient + diffuse + specular + spot_light);
+	
 	return { p.x, p.y, depth, color, normal, pos };
+}
+
+Vec3 ZBuffer::calcSpotLight(const Vec3 &pos)
+{
+	for (auto &light : _lights)
+	{
+		if (light.type == LIGHT_TYPE_SPOT)
+		{
+			auto light_color = getLightColor(light);
+
+			Vec3 light_dir = { light.dirX, light.dirY, light.dirZ };
+			light_dir.normalize();
+
+			Vec3 light_pos = { light.posX, light.posY, light.posZ };
+			auto angle = 7.0 * consts::PI / 180.0;
+
+			auto res = acos(light_dir.dot((pos - light_pos).normalize()));
+
+			if (res >= 0 && res <= angle)
+			{
+				auto base_color = colorToVec(_base_color);
+				return base_color * 3;
+			}
+		}
+	}
+
+	return {};
 }
 
 Vec3 ZBuffer::calcLightDir(const LightParams &light, const Vec3 &pos)
@@ -278,7 +287,6 @@ Vec3 ZBuffer::calcDiffuse(const Vec3 &pos, const Vec3 &normal)
 	if (!_lights.empty())
 	{
 		Vec3 res = {};
-		_Id = (1.0 - _Ia) / _lights.size() / 2.0;
 
 		for (auto &light : _lights)
 		{
@@ -307,7 +315,6 @@ Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 	if (!_lights.empty())
 	{
 		Vec3 res = {};
-		_Is = (1.0 - _Ia) / _lights.size() / 2.0;
 
 		for (auto &light : _lights)
 		{
@@ -337,6 +344,21 @@ Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 	}
 
 	return {};
+}
+
+void ZBuffer::setLights(const std::vector<LightParams> &lights)
+{
+	_lights = lights;
+	allocateLightsIntensities();
+}
+
+void ZBuffer::allocateLightsIntensities()
+{
+	if (!_lights.empty())
+	{
+		_Is = (1.0 - _Ia) / _lights.size() / 2.0;
+		_Id = (1.0 - _Ia) / _lights.size() / 2.0;
+	}
 }
 
 Color ZBuffer::vecToColor(const Vec3 &vec)

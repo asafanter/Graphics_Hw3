@@ -38,7 +38,7 @@ public: //methods
 	Pixel interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p);
 	void drawPolygonWireFrame(const Poly &polygon);
 	void drawPolygonSolid(const Poly &polygon);
-	void setLights(const std::vector<LightParams> &lights) { _lights = lights; }
+	void setLights(const std::vector<LightParams> &lights);
 	void setAmbient(const LightParams &ambient) { _ambient = ambient; }
 	void calcDrawOrder(Pixel &start, Pixel &via, Pixel &target, 
 		const Poly &polygon);
@@ -50,12 +50,14 @@ public: //methods
 	Vec3 calcAmbient();
 	Vec3 calcDiffuse(const Vec3 &pos, const Vec3 &normal);
 	Vec3 calcSpecular(const Vec3 &pos, const Vec3 &normal);
+	Vec3 calcSpotLight(const Vec3 &pos);
 	Vec3 calcLightDir(const LightParams &light, const Vec3 &pos);
 	Vec3 calcVertexNormal(const Vertex &vertex);
 	Vec3 calcVertexPos(const Vertex &vertex);
 	void calcCurrPolygonNormal(const Poly &polygon);
 	void calcCurrPolygonPos(const Poly &polygon);
 	void saveImageAsPng(const char* name);
+	void allocateLightsIntensities();
 
 private: //members
 	int *_bits;
