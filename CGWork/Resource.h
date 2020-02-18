@@ -88,13 +88,16 @@
 #define ID_BACKFACE_ACTIVATE            32826
 #define ID_BACKFACE_OFF                 32827
 #define ID_BACKFACE_ON                  32828
+#define ID_FOG_ON                       32829
+#define ID_FOG_OFF                      32830
+#define ID_COLORS_FOG                   32831
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        150
-#define _APS_NEXT_COMMAND_VALUE         32829
+#define _APS_NEXT_COMMAND_VALUE         32832
 #define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

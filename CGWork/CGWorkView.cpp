@@ -135,6 +135,11 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_COMMAND(ID_BACKFACE_OFF, &CCGWorkView::OnBackfaceOff)
 	ON_UPDATE_COMMAND_UI(ID_BACKFACE_ON, &CCGWorkView::OnUpdateBackfaceOn)
 	ON_UPDATE_COMMAND_UI(ID_BACKFACE_OFF, &CCGWorkView::OnUpdateBackfaceOff)
+	ON_COMMAND(ID_FOG_ON, &CCGWorkView::OnFogOn)
+	ON_COMMAND(ID_COLORS_FOG, &CCGWorkView::OnColorsFog)
+	ON_COMMAND(ID_FOG_OFF, &CCGWorkView::OnFogOff)
+	ON_UPDATE_COMMAND_UI(ID_FOG_ON, &CCGWorkView::OnUpdateFogOn)
+	ON_UPDATE_COMMAND_UI(ID_FOG_OFF, &CCGWorkView::OnUpdateFogOff)
 END_MESSAGE_MAP()
 
 
@@ -1151,4 +1156,40 @@ void CCGWorkView::OnUpdateBackfaceOn(CCmdUI *pCmdUI)
 void CCGWorkView::OnUpdateBackfaceOff(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(!scene.getBackFaceCulling());
+}
+
+
+void CCGWorkView::OnFogOn()
+{
+	scene.setEnableFog(true);
+}
+
+
+void CCGWorkView::OnColorsFog()
+{
+	CColorDialog color_dialog;
+	if (color_dialog.DoModal() == IDOK)
+	{
+		COLORREF color = color_dialog.GetColor();
+		scene.setFogColor(color);
+	}
+	//RedrawWindow();
+}
+
+
+void CCGWorkView::OnFogOff()
+{
+	scene.setEnableFog(false);
+}
+
+
+void CCGWorkView::OnUpdateFogOn(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.isFoggy());
+}
+
+
+void CCGWorkView::OnUpdateFogOff(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(!scene.isFoggy());
 }

@@ -29,6 +29,9 @@ public:
 	Scene &reset();
 	void setShading(const Shading &new_shading) { _shading = new_shading; }
 	void flipNormals();
+	void setEnableFog(const bool &val) { _is_foggy = val; }
+	void setFogColor(const Color &color) { _fog_color = color; }
+	bool isFoggy() const { return _is_foggy; }
 
 	COLORREF getBackgroundColor() const { return _background_color; }
 	bool getBackFaceCulling() const { return _back_face_culling; }
@@ -68,6 +71,8 @@ private:
 	bool _is_normals_fliped;
 	Shading _shading;
 	bool _back_face_culling;
+	bool _is_foggy;
+	Color _fog_color;
 };
 
 

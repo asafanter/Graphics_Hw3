@@ -19,7 +19,10 @@ ZBuffer::ZBuffer() :
 	_Is(1.0),
 	_Ispot(1.0),
 	_curr_polygon_normal({}),
-	_curr_polygon_pos({})
+	_curr_polygon_pos({}),
+	_png(),
+	_is_foggy(false),
+	_fog_color({ 127, 127, 127 })
 {
 	setDefaultColor(RGB(0, 0, 0));
 }
@@ -38,7 +41,9 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_Ispot(1.0),
 	_curr_polygon_normal({}),
 	_curr_polygon_pos({}),
-	_png()
+	_png(),
+	_is_foggy(false),
+	_fog_color({ 127, 127, 127 })
 {
 	_z.resize(width * height);
 	_drawn.resize(width * height);
@@ -209,6 +214,29 @@ double ZBuffer::calcWeight(const Pixel &p1, const Pixel &p2, const Pixel &p)
 	return res;
 }
 
+double ZBuffer::calcDepthInFog(const double &depth)
+{
+	if (!_is_foggy)
+	{
+		return 0.0;
+	}
+
+	double fog_start = 1.0;
+	double fog_end = 0.7;
+	double res = (depth - fog_start) / (fog_end - fog_start);
+
+	if (res < 0.0)
+	{
+		res = 0.0;
+	}
+	if (res > 1.0)
+	{
+		res = 1.0;
+	}
+
+	return res;
+}
+
 Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p)
 {
 	double weight = calcWeight(p1, p2, p);
@@ -227,7 +255,13 @@ Pixel ZBuffer::interpolatePixel(const Pixel &p1, const Pixel &p2, const Pixel &p
 	Vec3 specular = calcSpecular(pos, normal);
 	Vec3 spot_light = calcSpotLight(pos);
 
-	Color color = vecToColor(ambient + diffuse + specular + spot_light);
+	Vec3 object_color = ambient + diffuse + specular + spot_light;
+
+	auto depth_in_fog = calcDepthInFog(depth);
+
+	Vec3 final_color = _fog_color * depth_in_fog + object_color * (1 - depth_in_fog);
+
+	Color color = vecToColor(final_color);
 	
 	return { p.x, p.y, depth, color, normal, pos };
 }

@@ -200,6 +200,11 @@ public:
 	afx_msg void OnBackfaceOff();
 	afx_msg void OnUpdateBackfaceOn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBackfaceOff(CCmdUI *pCmdUI);
+	afx_msg void OnFogOn();
+	afx_msg void OnColorsFog();
+	afx_msg void OnFogOff();
+	afx_msg void OnUpdateFogOn(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateFogOff(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

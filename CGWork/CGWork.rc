@@ -113,6 +113,7 @@ BEGIN
             MENUITEM "face normals",                ID_COLORS_FACENORMALS
             MENUITEM "vertices normals",            ID_COLORS_VERTICESNORMALS
             MENUITEM "bounding box normals",        ID_COLORS_BOUNDINGBOX
+            MENUITEM "fog",                         ID_COLORS_FOG
         END
     END
     POPUP "&Light"
@@ -148,6 +149,11 @@ BEGIN
     BEGIN
         MENUITEM "on",                          ID_BACKFACE_ON
         MENUITEM "off",                         ID_BACKFACE_OFF
+    END
+    POPUP "fog"
+    BEGIN
+        MENUITEM "on",                          ID_FOG_ON
+        MENUITEM "off",                         ID_FOG_OFF
     END
 END
 

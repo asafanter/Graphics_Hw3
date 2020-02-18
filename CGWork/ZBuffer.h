@@ -58,6 +58,9 @@ public: //methods
 	void calcCurrPolygonPos(const Poly &polygon);
 	void saveImageAsPng(const char* name);
 	void allocateLightsIntensities();
+	void setEnableFog(const bool &val) { _is_foggy = val; }
+	void setFogColor(const Color &color) { _fog_color = colorToVec(color); }
+	double calcDepthInFog(const double &depth);
 
 private: //members
 	int *_bits;
@@ -77,5 +80,7 @@ private: //members
 	Vec3 _curr_polygon_normal;
 	Vec3 _curr_polygon_pos;
 	PngWrapper _png;
+	bool _is_foggy;
+	Vec3 _fog_color;
 };
 

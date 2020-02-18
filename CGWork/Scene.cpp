@@ -17,7 +17,9 @@ Scene::Scene() :
 	_ambient(),
 	_is_normals_fliped(false),
 	_shading(Shading::PHONG),
-	_back_face_culling(false)
+	_back_face_culling(false),
+	_is_foggy(false),
+	_fog_color(RGB(127, 127, 127))
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -78,6 +80,8 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 
 	zbuffer.setLights(_lights);
 	zbuffer.setAmbient(_ambient);
+	zbuffer.setEnableFog(_is_foggy);
+	zbuffer.setFogColor(_fog_color);
 
 	for (auto &obj : _objs) {
 
