@@ -141,7 +141,15 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_UPDATE_COMMAND_UI(ID_FOG_ON, &CCGWorkView::OnUpdateFogOn)
 	ON_UPDATE_COMMAND_UI(ID_FOG_OFF, &CCGWorkView::OnUpdateFogOff)
 	ON_COMMAND(ID_BOX_3X3, &CCGWorkView::OnBox3x3)
-END_MESSAGE_MAP()
+	ON_COMMAND(ID_FILTER_NONE, &CCGWorkView::OnFilterNone)
+	ON_COMMAND(ID_BOX_5X5, &CCGWorkView::OnBox5x5)
+	ON_COMMAND(ID_TRIANGLE_3X3, &CCGWorkView::OnTriangle3x3)
+		ON_COMMAND(ID_TRIANGLE_5X5, &CCGWorkView::OnTriangle5x5)
+		ON_COMMAND(ID_GAUSSIAN_3X3, &CCGWorkView::OnGaussian3x3)
+		ON_COMMAND(ID_GAUSSIAN_5X5, &CCGWorkView::OnGaussian5x5)
+		ON_COMMAND(ID_SINC_3X3, &CCGWorkView::OnSinc3x3)
+		ON_COMMAND(ID_SINC_5X5, &CCGWorkView::OnSinc5x5)
+		END_MESSAGE_MAP()
 
 
 // A patch to fix GLaux disappearance from VS2005 to VS2008
@@ -1198,5 +1206,53 @@ void CCGWorkView::OnUpdateFogOff(CCmdUI *pCmdUI)
 
 void CCGWorkView::OnBox3x3()
 {
-	scene.setFilter();
+	scene.setFilter(Scene::Filter::BOX3);
+}
+
+
+void CCGWorkView::OnFilterNone()
+{
+	scene.setFilter(Scene::Filter::NONE);
+}
+
+
+void CCGWorkView::OnBox5x5()
+{
+	scene.setFilter(Scene::Filter::BOX5);
+}
+
+
+void CCGWorkView::OnTriangle3x3()
+{
+	scene.setFilter(Scene::Filter::TRAINGLE3);
+}
+
+
+void CCGWorkView::OnTriangle5x5()
+{
+	scene.setFilter(Scene::Filter::TRAINGLE5);
+}
+
+
+void CCGWorkView::OnGaussian3x3()
+{
+	scene.setFilter(Scene::Filter::GAUSSIAN3);
+}
+
+
+void CCGWorkView::OnGaussian5x5()
+{
+	scene.setFilter(Scene::Filter::GAUSSIAN5);
+}
+
+
+void CCGWorkView::OnSinc3x3()
+{
+	scene.setFilter(Scene::Filter::SINC3);
+}
+
+
+void CCGWorkView::OnSinc5x5()
+{
+	scene.setFilter(Scene::Filter::SINC5);
 }

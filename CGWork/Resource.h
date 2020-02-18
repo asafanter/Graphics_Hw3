@@ -93,13 +93,24 @@
 #define ID_COLORS_FOG                   32831
 #define ID_FILTER_BOX                   32832
 #define ID_BOX_3X3                      32833
+#define ID_FILTER_NONE                  32834
+#define ID_BOX_5X5                      32835
+#define ID_FILTER_TRIANGLE              32836
+#define ID_FILTER_GAUSSIAN              32837
+#define ID_FILTER_SINC                  32838
+#define ID_TRIANGLE_3X3                 32839
+#define ID_TRIANGLE_5X5                 32840
+#define ID_GAUSSIAN_3X3                 32841
+#define ID_GAUSSIAN_5X5                 32842
+#define ID_SINC_3X3                     32843
+#define ID_SINC_5X5                     32844
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        150
-#define _APS_NEXT_COMMAND_VALUE         32834
+#define _APS_NEXT_COMMAND_VALUE         32845
 #define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

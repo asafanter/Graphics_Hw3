@@ -48,7 +48,7 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_z.resize(width * height);
 	_drawn.resize(width * height);
 	setDefaultColor(color);
-	_Ia = 1.0;
+	_Ia = 0.2;
 }
 
 void ZBuffer::saveImageAsPng(const char* name)
@@ -391,6 +391,11 @@ void ZBuffer::setLights(const std::vector<LightParams> &lights)
 
 void ZBuffer::allocateLightsIntensities()
 {
+	if (_lights.empty())
+	{
+		_Ia = 1.0;
+	}
+
 	if (!_lights.empty())
 	{
 		int spot_lights_count = 0;
@@ -628,11 +633,6 @@ void ZBuffer::drawPolygonSolid(const Poly &polygon)
 			is_filled = true;
 		}
 	}
-
-	//Vertex test = { Vec3d(0,0,5.0), Vec3d(), Vec3d(), RGB(255,255,255), {} };
-	//Pixel test_px = toPixel(test, polygon);
-
-	//drawLine(test_px, test_px);
 }
 
 void ZBuffer::draw(const Object &object)
@@ -643,7 +643,6 @@ void ZBuffer::draw(const Object &object)
 		{
 			for (auto &polygon : mesh.getRawPolygons())
 			{
-				polygon->setColor(RGB(255, 255, 255));
 				drawPolygonWireFrame(*polygon);
 			}
 		}
@@ -764,7 +763,7 @@ Vec3 ZBuffer::calcFilterColor(const int &row, const int &col, const std::vector<
 
 void ZBuffer::applyFilter(const std::vector<int> &kernel)
 {
-	std::vector<int> new_bits(_width * _height);
+	int* new_bits = new int[_width * _height];
 
 	for (int i = 0; i < _height; i++)
 	{
@@ -777,14 +776,8 @@ void ZBuffer::applyFilter(const std::vector<int> &kernel)
 			new_bits[i * _width + j] = final_color;
 		}
 	}
-	
-	for (int i = 0; i < _height; i++)
-	{
-		for (int j = 0; j < _width; j++)
-		{
-			_bits[i * _width + j] = new_bits[i * _width + j];
-		}
-	}
+
+	_bits = new_bits;
 }
 
 ZBuffer::~ZBuffer()

@@ -90,13 +90,10 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.setAttributes(attr);
 		zbuffer.draw(obj);	
 	}
-	if (_filter == Filter::BOX3)
+
+	if (_filter != Filter::NONE)
 	{
-		std::vector<int> kernel;
-		for (int i = 0; i < 25; i++)
-		{
-			kernel.push_back(1);
-		}
+		auto kernel = createKernel();
 		zbuffer.applyFilter(kernel);
 	}
 
@@ -106,6 +103,213 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	}
 }
 
+std::vector<int> Scene::createKernel()
+{
+	if (_filter == Filter::BOX3)
+	{
+		return createKernelBox3();
+	}
+	else if (_filter == Filter::BOX5)
+	{
+		return createKernelBox5();
+	}
+	else if (_filter == Filter::TRAINGLE3)
+	{
+		return createKernelTriangle3();
+	}
+	else if (_filter == Filter::TRAINGLE5)
+	{
+		return createKernelTriangle5();
+	}
+	else if (_filter == Filter::GAUSSIAN3)
+	{
+		return createKernelGaussian3();
+	}
+	else if (_filter == Filter::GAUSSIAN5)
+	{
+		return createKernelGaussian5();
+	}
+	else if (_filter == Filter::SINC3)
+	{
+		return createKernelSinc3();
+	}
+	else if (_filter == Filter::SINC5)
+	{
+		return createKernelSinc5();
+	}
+}
+
+std::vector<int> Scene::createKernelBox3()
+{
+	std::vector<int> kernel;
+	for (int i = 0; i < 9; i++)
+	{
+		kernel.push_back(1);
+	}
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelBox5()
+{
+	std::vector<int> kernel;
+	for (int i = 0; i < 25; i++)
+	{
+		kernel.push_back(1);
+	}
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelTriangle3()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(4);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(1);
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelTriangle5()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(4);
+	kernel.push_back(6);
+	kernel.push_back(4);
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(6);
+	kernel.push_back(9);
+	kernel.push_back(6);
+	kernel.push_back(3);
+	kernel.push_back(2);
+	kernel.push_back(4);
+	kernel.push_back(6);
+	kernel.push_back(4);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(2);
+	kernel.push_back(1);
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelGaussian3()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(5);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(1);
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelGaussian5()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(4);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(4);
+	kernel.push_back(10);
+	kernel.push_back(4);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(2);
+	kernel.push_back(4);
+	kernel.push_back(2);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+	kernel.push_back(1);
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelSinc3()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(4);
+	kernel.push_back(3);
+	kernel.push_back(2);
+	kernel.push_back(3);
+	kernel.push_back(2);
+
+	return kernel;
+}
+
+std::vector<int> Scene::createKernelSinc5()
+{
+	std::vector<int> kernel;
+
+	kernel.push_back(-2);
+	kernel.push_back(-1);
+	kernel.push_back(0);
+	kernel.push_back(-1);
+	kernel.push_back(-2);
+	kernel.push_back(-1);
+	kernel.push_back(4);
+	kernel.push_back(6);
+	kernel.push_back(4);
+	kernel.push_back(-1);
+	kernel.push_back(0);
+	kernel.push_back(6);
+	kernel.push_back(9);
+	kernel.push_back(6);
+	kernel.push_back(0);
+	kernel.push_back(-1);
+	kernel.push_back(4);
+	kernel.push_back(6);
+	kernel.push_back(4);
+	kernel.push_back(-1);
+	kernel.push_back(-2);
+	kernel.push_back(-1);
+	kernel.push_back(0);
+	kernel.push_back(-1);
+	kernel.push_back(-2);
+
+	return kernel;
+}
 
 Scene & Scene::setWireFrameColor(const COLORREF & color, int Id)
 {

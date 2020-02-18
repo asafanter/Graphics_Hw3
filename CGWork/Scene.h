@@ -17,6 +17,19 @@ public:
 	static constexpr double NEAR_PLANE = 0.1;
 	static constexpr double FAR_PLANE = 20.0;
 
+	enum Filter
+	{
+		NONE,
+		BOX3,
+		BOX5,
+		TRAINGLE3,
+		TRAINGLE5,
+		GAUSSIAN3,
+		GAUSSIAN5,
+		SINC3,
+		SINC5
+	};
+
 	Scene();
 	~Scene() = default;
 	void addObject(const Object& object);
@@ -32,7 +45,16 @@ public:
 	void setEnableFog(const bool &val) { _is_foggy = val; }
 	void setFogColor(const Color &color) { _fog_color = color; }
 	bool isFoggy() const { return _is_foggy; }
-	void setFilter() { _filter = Filter::BOX3; }
+	void setFilter(const Filter &filter_type) { _filter = filter_type; }
+	std::vector<int> createKernel();
+	std::vector<int> createKernelBox3();
+	std::vector<int> createKernelBox5();
+	std::vector<int> createKernelTriangle3();
+	std::vector<int> createKernelTriangle5();
+	std::vector<int> createKernelGaussian3();
+	std::vector<int> createKernelGaussian5();
+	std::vector<int> createKernelSinc3();
+	std::vector<int> createKernelSinc5();
 
 	COLORREF getBackgroundColor() const { return _background_color; }
 	bool getBackFaceCulling() const { return _back_face_culling; }
@@ -57,12 +79,6 @@ private:
 		Vec3d pos;
 		Vec3d front;
 		Vec3d up;
-	};
-
-	enum Filter
-	{
-		NONE,
-		BOX3
 	};
 
 	std::vector<Object> _objs;

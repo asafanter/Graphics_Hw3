@@ -157,9 +157,26 @@ BEGIN
     END
     POPUP "filter"
     BEGIN
+        MENUITEM "none",                        ID_FILTER_NONE
         POPUP "box"
         BEGIN
             MENUITEM "3X3",                         ID_BOX_3X3
+            MENUITEM "5X5",                         ID_BOX_5X5
+        END
+        POPUP "triangle"
+        BEGIN
+            MENUITEM "3X3",                         ID_TRIANGLE_3X3
+            MENUITEM "5X5",                         ID_TRIANGLE_5X5
+        END
+        POPUP "gaussian"
+        BEGIN
+            MENUITEM "3X3",                         ID_GAUSSIAN_3X3
+            MENUITEM "5X5",                         ID_GAUSSIAN_5X5
+        END
+        POPUP "sinc"
+        BEGIN
+            MENUITEM "3X3",                         ID_SINC_3X3
+            MENUITEM "5X5",                         ID_SINC_5X5
         END
     END
 END

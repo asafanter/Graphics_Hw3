@@ -206,6 +206,14 @@ public:
 	afx_msg void OnUpdateFogOn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateFogOff(CCmdUI *pCmdUI);
 	afx_msg void OnBox3x3();
+	afx_msg void OnFilterNone();
+	afx_msg void OnBox5x5();
+	afx_msg void OnTriangle3x3();
+	afx_msg void OnTriangle5x5();
+	afx_msg void OnGaussian3x3();
+	afx_msg void OnGaussian5x5();
+	afx_msg void OnSinc3x3();
+	afx_msg void OnSinc5x5();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp
