@@ -140,6 +140,7 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 	ON_COMMAND(ID_FOG_OFF, &CCGWorkView::OnFogOff)
 	ON_UPDATE_COMMAND_UI(ID_FOG_ON, &CCGWorkView::OnUpdateFogOn)
 	ON_UPDATE_COMMAND_UI(ID_FOG_OFF, &CCGWorkView::OnUpdateFogOff)
+	ON_COMMAND(ID_BOX_3X3, &CCGWorkView::OnBox3x3)
 END_MESSAGE_MAP()
 
 
@@ -1192,4 +1193,10 @@ void CCGWorkView::OnUpdateFogOn(CCmdUI *pCmdUI)
 void CCGWorkView::OnUpdateFogOff(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(!scene.isFoggy());
+}
+
+
+void CCGWorkView::OnBox3x3()
+{
+	scene.setFilter();
 }

@@ -61,6 +61,10 @@ public: //methods
 	void setEnableFog(const bool &val) { _is_foggy = val; }
 	void setFogColor(const Color &color) { _fog_color = colorToVec(color); }
 	double calcDepthInFog(const double &depth);
+	Vec3 getValue(const int &row, const int &col);
+	void setValue(const int &row, const int &col, const Color &color);
+	void applyFilter(const std::vector<int> &kernel);
+	Vec3 calcFilterColor(const int &row, const int &col, const std::vector<int> &kernel);
 
 private: //members
 	int *_bits;

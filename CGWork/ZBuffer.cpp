@@ -48,7 +48,7 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_z.resize(width * height);
 	_drawn.resize(width * height);
 	setDefaultColor(color);
-	_Ia = 0.2;
+	_Ia = 1.0;
 }
 
 void ZBuffer::saveImageAsPng(const char* name)
@@ -643,6 +643,7 @@ void ZBuffer::draw(const Object &object)
 		{
 			for (auto &polygon : mesh.getRawPolygons())
 			{
+				polygon->setColor(RGB(255, 255, 255));
 				drawPolygonWireFrame(*polygon);
 			}
 		}
@@ -717,6 +718,73 @@ Pixel ZBuffer::toPixel(const Vertex &vertex, const Poly &polygon)
 	int y_res = static_cast<uint>(-(_height / 2.0) * (pos.y - 1.0));
 
 	return { x_res, y_res, pos.z, vertex.color, normal, pos};
+}
+
+Vec3 ZBuffer::getValue(const int &row, const int &col)
+{
+	if (row < 0 || row >= _height || col < 0 || col >= _width)
+	{
+		return { 0, 0, 0 };
+	}
+
+	return colorToVec(_bits[row * _width + col]);
+}
+
+void ZBuffer::setValue(const int &row, const int &col, const Color &color)
+{
+	_bits[row * _width + col] = RGBToBGR(color);
+}
+
+Vec3 ZBuffer::calcFilterColor(const int &row, const int &col, const std::vector<int> &kernel)
+{
+	if (vecToColor(getValue(row, col)) != 0)
+	{
+		return getValue(row, col);
+	}
+
+	Vec3 res = { 0, 0, 0 };
+	int kernel_size = sqrt(kernel.size());
+
+	for (int i = 0; i < kernel_size; i++)
+	{
+		for (int j = 0; j < kernel_size; j++)
+		{
+			res = res + getValue(row - 1 + i, col - 1 + j) * kernel[i * kernel_size + j];
+		}
+	}
+
+	int sum = 0;
+	for (auto &val : kernel)
+	{
+		sum += val;
+	}
+
+	return res / sum;
+}
+
+void ZBuffer::applyFilter(const std::vector<int> &kernel)
+{
+	std::vector<int> new_bits(_width * _height);
+
+	for (int i = 0; i < _height; i++)
+	{
+		for (int j = 0; j < _width; j++)
+		{
+			auto filter_color = calcFilterColor(i, j, kernel);
+
+			Color final_color = RGBToBGR(vecToColor(filter_color));
+
+			new_bits[i * _width + j] = final_color;
+		}
+	}
+	
+	for (int i = 0; i < _height; i++)
+	{
+		for (int j = 0; j < _width; j++)
+		{
+			_bits[i * _width + j] = new_bits[i * _width + j];
+		}
+	}
 }
 
 ZBuffer::~ZBuffer()

@@ -32,6 +32,7 @@ public:
 	void setEnableFog(const bool &val) { _is_foggy = val; }
 	void setFogColor(const Color &color) { _fog_color = color; }
 	bool isFoggy() const { return _is_foggy; }
+	void setFilter() { _filter = Filter::BOX3; }
 
 	COLORREF getBackgroundColor() const { return _background_color; }
 	bool getBackFaceCulling() const { return _back_face_culling; }
@@ -58,6 +59,12 @@ private:
 		Vec3d up;
 	};
 
+	enum Filter
+	{
+		NONE,
+		BOX3
+	};
+
 	std::vector<Object> _objs;
 	Tmatd _view;
 	Tmatd _projection;
@@ -73,6 +80,7 @@ private:
 	bool _back_face_culling;
 	bool _is_foggy;
 	Color _fog_color;
+	Filter _filter;
 };
 
 

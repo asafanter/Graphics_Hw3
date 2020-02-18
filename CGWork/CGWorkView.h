@@ -205,6 +205,7 @@ public:
 	afx_msg void OnFogOff();
 	afx_msg void OnUpdateFogOn(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateFogOff(CCmdUI *pCmdUI);
+	afx_msg void OnBox3x3();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp
