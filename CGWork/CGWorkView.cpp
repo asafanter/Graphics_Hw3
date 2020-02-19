@@ -149,6 +149,9 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 		ON_COMMAND(ID_GAUSSIAN_5X5, &CCGWorkView::OnGaussian5x5)
 		ON_COMMAND(ID_SINC_3X3, &CCGWorkView::OnSinc3x3)
 		ON_COMMAND(ID_SINC_5X5, &CCGWorkView::OnSinc5x5)
+		ON_COMMAND(ID_FILE_SAVEHISTORY, &CCGWorkView::OnFileSavehistory)
+		ON_COMMAND(ID_RECORD_START, &CCGWorkView::OnRecordStart)
+		ON_COMMAND(ID_RECORD_STOP, &CCGWorkView::OnRecordStop)
 		END_MESSAGE_MAP()
 
 
@@ -1258,4 +1261,22 @@ void CCGWorkView::OnSinc3x3()
 void CCGWorkView::OnSinc5x5()
 {
 	scene.setFilter(Scene::Filter::SINC5);
+}
+
+
+void CCGWorkView::OnFileSavehistory()
+{
+	scene.saveHistory();
+}
+
+
+void CCGWorkView::OnRecordStart()
+{
+	scene.enableRecordingHistory(true);
+}
+
+
+void CCGWorkView::OnRecordStop()
+{
+	scene.enableRecordingHistory(false);
 }

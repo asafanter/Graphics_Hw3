@@ -20,7 +20,9 @@ Scene::Scene() :
 	_back_face_culling(false),
 	_is_foggy(false),
 	_fog_color(RGB(127, 127, 127)),
-	_filter(Filter::NONE)
+	_filter(Filter::NONE),
+	_is_recording_history(false),
+	_need_save_history(false)
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -75,6 +77,8 @@ Tmatd Scene::lookAt(const Vec3d &eye, const Vec3d &at, const Vec3d &up)
 void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	bool givenFaceNormals, bool givenVertexNormals, bool showBoundingBox)
 {
+	initHistory(zbuffer);
+
 	Attr attr = { showFaceNormals ,showVerNormals, givenFaceNormals, givenVertexNormals, 
 		showBoundingBox, Tmatd(), NEAR_PLANE , _shading, _drawing_mode,
 	_camera.pos, _back_face_culling};
@@ -91,9 +95,15 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.draw(obj);	
 	}
 
-	if (_history == nullptr)
+	if (_is_recording_history)
 	{
-		_history = new int[zbuffer.getWidth() * zbuffer.getHeight()];
+		updateHistory(zbuffer);
+	}
+
+	if (_need_save_history)
+	{
+		zbuffer.saveImageAsPng("blur.png", _history);
+		_need_save_history = false;
 	}
 
 	if (_filter != Filter::NONE)
@@ -106,6 +116,51 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	{
 		_is_initialized = true;
 	}
+}
+
+void Scene::saveHistory()
+{
+	_need_save_history = true;
+}
+
+void Scene::updateHistory(const ZBuffer &zbuffer)
+{
+	float factor = 0.98;
+
+	int *bits = zbuffer.getBits();
+	for (int i = 0; i < zbuffer.getWidth() * zbuffer.getHeight(); i++)
+	{
+		if (bits[i] != 0)
+		{
+			_history[i] = bits[i];
+		}
+		else
+		{
+			if (_history[i] != 0)
+			{
+				int r = GetBValue(_history[i]);
+				int g = GetGValue(_history[i]);
+				int b = GetRValue(_history[i]);
+
+				Color color = RGB(b * factor, g * factor, r * factor);
+				_history[i] = color;
+			}
+		}
+	}
+}
+
+void Scene::initHistory(const ZBuffer &zbuffer)
+{
+	if (_history == nullptr)
+	{
+		int size = zbuffer.getWidth() * zbuffer.getHeight();
+		_history = new int[size];
+		for (int i = 0; i < size; i++)
+		{
+			_history[i] = 0;
+		}
+	}
+
 }
 
 Scene::~Scene()

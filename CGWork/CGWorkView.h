@@ -214,6 +214,9 @@ public:
 	afx_msg void OnGaussian5x5();
 	afx_msg void OnSinc3x3();
 	afx_msg void OnSinc5x5();
+	afx_msg void OnFileSavehistory();
+	afx_msg void OnRecordStart();
+	afx_msg void OnRecordStop();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

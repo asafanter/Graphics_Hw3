@@ -78,6 +78,7 @@ BEGIN
     BEGIN
         MENUITEM "&Load",                       ID_FILE_LOAD
         MENUITEM "save",                        ID_FILE_SAVE32825
+        MENUITEM "save history",                ID_FILE_SAVEHISTORY
         MENUITEM "E&xit",                       ID_APP_EXIT
     END
     POPUP "&View"
@@ -178,6 +179,11 @@ BEGIN
             MENUITEM "3X3",                         ID_SINC_3X3
             MENUITEM "5X5",                         ID_SINC_5X5
         END
+    END
+    POPUP "record"
+    BEGIN
+        MENUITEM "start",                       ID_RECORD_START
+        MENUITEM "stop",                        ID_RECORD_STOP
     END
 END
 

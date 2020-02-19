@@ -60,6 +60,10 @@ public:
 	bool getBackFaceCulling() const { return _back_face_culling; }
 	DrawingMode getDrawingMode() const { return _drawing_mode; }
 	Scene& setBackgroundColor(const COLORREF &color) { _background_color = color; return *this; }
+	void initHistory(const ZBuffer &zbuffer);
+	void updateHistory(const ZBuffer &zbuffer);
+	void saveHistory();
+	void enableRecordingHistory(const bool &val) { _is_recording_history = val; }
 
 	Scene& setWireFrameColor(const COLORREF &color, int Id);
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
@@ -98,6 +102,8 @@ private:
 	Color _fog_color;
 	Filter _filter;
 	int *_history;
+	bool _is_recording_history;
+	bool _need_save_history;
 };
 
 
