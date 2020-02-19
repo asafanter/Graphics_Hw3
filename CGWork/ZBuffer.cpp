@@ -773,7 +773,7 @@ Vec3 ZBuffer::calcFilterColor(const int &row, const int &col, const std::vector<
 	{
 		for (int j = 0; j < kernel_size; j++)
 		{
-			res = res + getValue(row - 1 + i, col - 1 + j) * kernel[i * kernel_size + j];
+			res = res + getValue(row - kernel_size / 2 + i, col - kernel_size / 2 + j) * kernel[i * kernel_size + j];
 		}
 	}
 
