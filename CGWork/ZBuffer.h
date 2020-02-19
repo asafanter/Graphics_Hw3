@@ -57,6 +57,7 @@ public: //methods
 	void calcCurrPolygonNormal(const Poly &polygon);
 	void calcCurrPolygonPos(const Poly &polygon);
 	void saveImageAsPng(const char* name);
+	void saveImageAsPng(const char* name, const int *bits);
 	void allocateLightsIntensities();
 	void setEnableFog(const bool &val) { _is_foggy = val; }
 	void setFogColor(const Color &color) { _fog_color = colorToVec(color); }

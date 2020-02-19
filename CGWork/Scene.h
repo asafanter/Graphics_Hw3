@@ -31,7 +31,7 @@ public:
 	};
 
 	Scene();
-	~Scene() = default;
+	~Scene();
 	void addObject(const Object& object);
 	Tmatd lookAt(const Vec3d &eye, const Vec3d &at, const Vec3d &up);
 	std::vector<Object> &getObjects() { return _objs; }
@@ -97,6 +97,7 @@ private:
 	bool _is_foggy;
 	Color _fog_color;
 	Filter _filter;
+	int *_history;
 };
 
 

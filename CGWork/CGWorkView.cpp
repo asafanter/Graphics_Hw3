@@ -371,6 +371,9 @@ void CCGWorkView::OnDraw(CDC* pDC)
 	zbuffer.setDefaultColor(scene.getBackgroundColor());
 		
 	scene.draw(zbuffer, m_bShowFaceNormals, m_bShowVerNormals, m_bshowGivenFNormal, m_bshowGivenVNormal, m_bShowBoundingBox);
+	
+
+	
 	SetDIBits(*pDCToUse, bm, 0, h, zbuffer.getBits(), &bminfo, 0);
 	m_pDC->BitBlt(r.left, r.top, r.Width(), r.Height(), pDCToUse, r.left, r.top, SRCCOPY);
 

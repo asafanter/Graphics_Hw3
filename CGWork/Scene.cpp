@@ -91,6 +91,11 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.draw(obj);	
 	}
 
+	if (_history == nullptr)
+	{
+		_history = new int[zbuffer.getWidth() * zbuffer.getHeight()];
+	}
+
 	if (_filter != Filter::NONE)
 	{
 		auto kernel = createKernel();
@@ -103,6 +108,13 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	}
 }
 
+Scene::~Scene()
+{
+	if (_history != nullptr)
+	{
+		delete[] _history;
+	}
+}
 std::vector<int> Scene::createKernel()
 {
 	if (_filter == Filter::BOX3)

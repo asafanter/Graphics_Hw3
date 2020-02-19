@@ -76,6 +76,31 @@ void ZBuffer::saveImageAsPng(const char* name)
 	res = _png.WritePng();
 }
 
+void ZBuffer::saveImageAsPng(const char* name, const int *bits)
+{
+	_png.SetWidth(_width);
+	_png.SetHeight(_height);
+	_png.SetFileName(name);
+
+	auto res = _png.InitWritePng();
+
+	for (int i = 0; i < _width * _height; i++)
+	{
+		int x = i % _width;
+		int y = _height - 1 - i / _width;
+
+		int r = GetRValue(bits[i]);
+		int g = GetGValue(bits[i]);
+		int b = GetBValue(bits[i]);
+
+		Color color = SET_RGB(b, g, r);
+
+		_png.SetValue(x, y, color);
+	}
+
+	res = _png.WritePng();
+}
+
 ZBuffer &ZBuffer::resize(const uint &width, const uint &height)
 {
 	if (!isEmpty())
