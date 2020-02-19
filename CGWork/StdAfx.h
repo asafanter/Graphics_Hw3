@@ -28,3 +28,5 @@
 #include <afxwin.h>
 #include <afxwin.h>
 #include <afxwin.h>
+#include <afxwin.h>
+#include <afxwin.h>

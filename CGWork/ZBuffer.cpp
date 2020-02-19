@@ -303,7 +303,7 @@ Vec3 ZBuffer::calcSpotLight(const Vec3 &pos)
 			light_dir.normalize();
 
 			Vec3 light_pos = { light.posX, light.posY, light.posZ };
-			auto angle = 7.0 * consts::PI / 180.0;
+			auto angle = 10.0 * consts::PI / 180.0;
 
 			auto res = acos(light_dir.dot((pos - light_pos).normalize()));
 
