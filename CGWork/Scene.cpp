@@ -112,6 +112,8 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.applyFilter(kernel);
 	}
 
+	zbuffer.setBackgroundImage("image.png", ZBuffer::BackgroundImageType::REPEAT);
+
 	if (!_is_initialized)
 	{
 		_is_initialized = true;

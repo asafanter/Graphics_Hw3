@@ -22,7 +22,8 @@ ZBuffer::ZBuffer() :
 	_curr_polygon_pos({}),
 	_png(),
 	_is_foggy(false),
-	_fog_color({ 127, 127, 127 })
+	_fog_color({ 127, 127, 127 }),
+	_has_background_image(false)
 {
 	setDefaultColor(RGB(0, 0, 0));
 }
@@ -452,6 +453,71 @@ void ZBuffer::allocateLightsIntensities()
 			_Is = (1.0 - _Ia) / _lights.size() / 2.0;
 			_Id = (1.0 - _Ia) / _lights.size() / 2.0;
 			_Ispot = 1 - _Ia - (1 - _Ia) / _lights.size();
+		}
+	}
+}
+
+void ZBuffer::setBackgroundImage(const char *file_name, const BackgroundImageType &type)
+{
+	_png.SetFileName(file_name);
+	auto res = _png.ReadPng();
+
+	auto w = _png.GetWidth();
+	auto h = _png.GetHeight();
+	auto ch = _png.GetNumChannels();
+
+	if (type == BackgroundImageType::REPEAT)
+	{
+		repeatImage(w, h);
+	}
+	else if (type == BackgroundImageType::STRETCH)
+	{
+		stretchImage(w, h);
+	}
+}
+
+void ZBuffer::repeatImage(const int &w, const int &h)
+{
+	for (int i = 0; i < _height; i++)
+	{
+		for (int j = 0; j < _width; j++)
+		{
+			auto color = getValue(i, j);
+			if (color.x == 0 && color.y == 0 && color.z == 0)
+			{
+				auto val = _png.GetValue(j % w, i % h);
+				auto r = GET_R(val);
+				auto g = GET_G(val);
+				auto b = GET_B(val);
+
+				setValue(i, j, RGB(r, g, b));
+			}
+
+		}
+	}
+}
+
+void ZBuffer::stretchImage(const int &w, const int &h)
+{
+	double w_ratio = static_cast<double>(_width) / w;
+	double h_ratio = static_cast<double>(_height) / h;
+
+	for (int i = 0; i < _height; i++)
+	{
+		for (int j = 0; j < _width; j++)
+		{
+			auto color = getValue(i, j);
+			if (color.x == 0 && color.y == 0 && color.z == 0)
+			{
+				auto val = _png.GetValue(j / w_ratio, i / h_ratio);
+				auto r = GET_R(val);
+				auto g = GET_G(val);
+				auto b = GET_B(val);
+
+				setValue(i, j, RGB(r, g, b));
+			}
+
+
 		}
 	}
 }

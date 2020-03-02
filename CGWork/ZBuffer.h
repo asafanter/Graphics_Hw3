@@ -11,10 +11,17 @@
 class ZBuffer
 {
 public:
+	enum BackgroundImageType
+	{
+		STRETCH,
+		REPEAT
+	};
+
 	ZBuffer();
 	ZBuffer(const uint &width, const uint &height, const Color &color = RGB(0, 0, 0));
 	ZBuffer &resize(const uint &width, const uint &height);
 	ZBuffer &set(const Pixel &p);
+	void setBackgroundImage(const char *file_name, const BackgroundImageType &type);
 	ZBuffer &setDefaultColor(const Color &color);
 	Color getColor(const uint &x, const uint &y) const { return _bits[x + _width * y]; }
 	uint getWidth() const { return _width; }
@@ -26,6 +33,7 @@ public:
 
 private: //defs
 	static constexpr uint MAX_LIGHTS = 7;
+
 
 public: //methods
 	Color RGBToBGR(COLORREF col);
@@ -66,6 +74,8 @@ public: //methods
 	void setValue(const int &row, const int &col, const Color &color);
 	void applyFilter(const std::vector<int> &kernel);
 	Vec3 calcFilterColor(const int &row, const int &col, const std::vector<int> &kernel);
+	void repeatImage(const int &w, const int &h);
+	void stretchImage(const int &w, const int &h);
 
 private: //members
 	int *_bits;
@@ -87,5 +97,6 @@ private: //members
 	PngWrapper _png;
 	bool _is_foggy;
 	Vec3 _fog_color;
+	bool _has_background_image;
 };
 
