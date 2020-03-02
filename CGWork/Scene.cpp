@@ -22,7 +22,9 @@ Scene::Scene() :
 	_fog_color(RGB(127, 127, 127)),
 	_filter(Filter::NONE),
 	_is_recording_history(false),
-	_need_save_history(false)
+	_need_save_history(false),
+	_background_image_type(ZBuffer::BackgroundImageType::NONE),
+	_background_image_file_name()
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -112,7 +114,11 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.applyFilter(kernel);
 	}
 
-	zbuffer.setBackgroundImage("image.png", ZBuffer::BackgroundImageType::REPEAT);
+	if (_background_image_type != ZBuffer::BackgroundImageType::NONE)
+	{
+		zbuffer.setBackgroundImage(_background_image_file_name.c_str(), _background_image_type);
+	}
+	
 
 	if (!_is_initialized)
 	{
@@ -421,8 +427,6 @@ Scene & Scene::setVerticesNormalsColor(const COLORREF & color, int Id)
 	return *this;
 }
 
-
-
 Scene & Scene::setBoundingBoxColor(const COLORREF & color, int Id)
 {
 	if (Id == -1)
@@ -435,3 +439,7 @@ Scene & Scene::setBoundingBoxColor(const COLORREF & color, int Id)
 	return *this;
 }
 
+void Scene::setBackgroundImage(const std::string &file_name)
+{
+	_background_image_file_name = file_name;
+}

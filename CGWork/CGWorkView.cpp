@@ -152,6 +152,13 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 		ON_COMMAND(ID_FILE_SAVEHISTORY, &CCGWorkView::OnFileSavehistory)
 		ON_COMMAND(ID_RECORD_START, &CCGWorkView::OnRecordStart)
 		ON_COMMAND(ID_RECORD_STOP, &CCGWorkView::OnRecordStop)
+		ON_COMMAND(ID_FILE_LOADBACKGROUND, &CCGWorkView::OnFileLoadbackground)
+		ON_COMMAND(ID_BACKGROUNDTYPE_NOBACKGROUND, &CCGWorkView::OnBackgroundtypeNobackground)
+		ON_COMMAND(ID_BACKGROUNDTYPE_STRETCH, &CCGWorkView::OnBackgroundtypeStretch)
+		ON_COMMAND(ID_BACKGROUNDTYPE_REPEAT, &CCGWorkView::OnBackgroundtypeRepeat)
+		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_STRETCH, &CCGWorkView::OnUpdateBackgroundtypeStretch)
+		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_REPEAT, &CCGWorkView::OnUpdateBackgroundtypeRepeat)
+		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_NOBACKGROUND, &CCGWorkView::OnUpdateBackgroundtypeNobackground)
 		END_MESSAGE_MAP()
 
 
@@ -1279,4 +1286,60 @@ void CCGWorkView::OnRecordStart()
 void CCGWorkView::OnRecordStop()
 {
 	scene.enableRecordingHistory(false);
+}
+
+
+void CCGWorkView::OnFileLoadbackground()
+{
+	TCHAR szFilters[] = _T("Png Image Files (*.png)|*.png|All Files (*.*)|*.*||");
+
+	CFileDialog dlg(TRUE, _T("png"), _T("*.png"), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilters);
+
+	if (dlg.DoModal() == IDOK) {
+		auto file_name = dlg.GetPathName();		// Full path and filename
+		auto a = file_name.GetLength();
+
+		CT2CA conversion(file_name);
+		std::string image_name(conversion);
+
+		scene.setBackgroundImage(image_name);
+
+		Invalidate();	// force a WM_PAINT for drawing.
+	}
+}
+
+
+void CCGWorkView::OnBackgroundtypeNobackground()
+{
+	scene.setBackgroundImageType(ZBuffer::BackgroundImageType::NONE);
+}
+
+
+void CCGWorkView::OnBackgroundtypeStretch()
+{
+	scene.setBackgroundImageType(ZBuffer::BackgroundImageType::STRETCH);
+}
+
+
+void CCGWorkView::OnBackgroundtypeRepeat()
+{
+	scene.setBackgroundImageType(ZBuffer::BackgroundImageType::REPEAT);
+}
+
+
+void CCGWorkView::OnUpdateBackgroundtypeStretch(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getBackgroundImageType() == ZBuffer::BackgroundImageType::STRETCH);
+}
+
+
+void CCGWorkView::OnUpdateBackgroundtypeRepeat(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getBackgroundImageType() == ZBuffer::BackgroundImageType::REPEAT);
+}
+
+
+void CCGWorkView::OnUpdateBackgroundtypeNobackground(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(scene.getBackgroundImageType() == ZBuffer::BackgroundImageType::NONE);
 }

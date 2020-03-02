@@ -217,6 +217,14 @@ public:
 	afx_msg void OnFileSavehistory();
 	afx_msg void OnRecordStart();
 	afx_msg void OnRecordStop();
+	afx_msg void OnFileLoadbackground();
+	afx_msg void OnFileRemovebackground();
+	afx_msg void OnBackgroundtypeNobackground();
+	afx_msg void OnBackgroundtypeStretch();
+	afx_msg void OnBackgroundtypeRepeat();
+	afx_msg void OnUpdateBackgroundtypeStretch(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateBackgroundtypeRepeat(CCmdUI *pCmdUI);
+	afx_msg void OnUpdateBackgroundtypeNobackground(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

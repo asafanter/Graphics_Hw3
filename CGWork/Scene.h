@@ -4,6 +4,7 @@
 
 #include <afxwin.h>
 #include <vector>
+#include <string>
 
 #include "Object.h"
 #include "Matrices.h"
@@ -64,6 +65,9 @@ public:
 	void updateHistory(const ZBuffer &zbuffer);
 	void saveHistory();
 	void enableRecordingHistory(const bool &val) { _is_recording_history = val; }
+	void setBackgroundImage(const std::string &file_name);
+	void setBackgroundImageType(const ZBuffer::BackgroundImageType &type) { _background_image_type = type; }
+	ZBuffer::BackgroundImageType getBackgroundImageType() const { return _background_image_type; }
 
 	Scene& setWireFrameColor(const COLORREF &color, int Id);
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
@@ -104,6 +108,9 @@ private:
 	int *_history;
 	bool _is_recording_history;
 	bool _need_save_history;
+	ZBuffer::BackgroundImageType _background_image_type;
+	std::string _background_image_file_name;
+
 };
 
 

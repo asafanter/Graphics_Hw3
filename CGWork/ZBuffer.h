@@ -13,6 +13,7 @@ class ZBuffer
 public:
 	enum BackgroundImageType
 	{
+		NONE,
 		STRETCH,
 		REPEAT
 	};

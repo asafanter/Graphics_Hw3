@@ -77,6 +77,13 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&Load",                       ID_FILE_LOAD
+        MENUITEM "load background",             ID_FILE_LOADBACKGROUND
+        POPUP "background type"
+        BEGIN
+            MENUITEM "no background",               ID_BACKGROUNDTYPE_NOBACKGROUND
+            MENUITEM "stretch",                     ID_BACKGROUNDTYPE_STRETCH
+            MENUITEM "repeat",                      ID_BACKGROUNDTYPE_REPEAT
+        END
         MENUITEM "save",                        ID_FILE_SAVE32825
         MENUITEM "save history",                ID_FILE_SAVEHISTORY
         MENUITEM "E&xit",                       ID_APP_EXIT
