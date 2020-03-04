@@ -140,7 +140,7 @@ void Scene::saveHistory()
 
 void Scene::updateHistory(const ZBuffer &zbuffer)
 {
-	float factor = 0.97;
+	float factor = 0.9;
 
 	int *bits = zbuffer.getBits();
 	for (int i = 0; i < zbuffer.getWidth() * zbuffer.getHeight(); i++)

@@ -873,6 +873,11 @@ void ZBuffer::applyFilter(const std::vector<int> &kernel)
 
 			Color final_color = RGBToBGR(vecToColor(filter_color));
 
+			//if (filter_color.x == 255 && filter_color.y == 255 && filter_color.z == 255)
+			//{
+			//	final_color = 0;
+			//}
+
 			new_bits[i * _width + j] = final_color;
 		}
 	}
