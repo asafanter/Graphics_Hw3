@@ -193,6 +193,7 @@
     </ClCompile>
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="FogDialog.cpp" />
     <ClCompile Include="iritSkel.cpp" />
     <ClCompile Include="LightDialog.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="MouseSensetivityDialog.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PerspectiveDialog.cpp" />
+    <ClCompile Include="PhongDialog.cpp" />
     <ClCompile Include="PolygonDialog.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="PngWrapper.cpp" />
@@ -227,6 +229,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="TheataOptions.cpp" />
     <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +242,7 @@
     <ClInclude Include="CGWorkView.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="FogDialog.h" />
     <ClInclude Include="iritSkel.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightDialog.h" />
@@ -251,6 +255,7 @@
     <ClInclude Include="MouseSensetivityDialog.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PerspectiveDialog.h" />
+    <ClInclude Include="PhongDialog.h" />
     <ClInclude Include="PolygonDialog.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="PngWrapper.h" />
@@ -281,6 +286,7 @@
     <ClInclude Include="..\include\triv_lib.h" />
     <ClInclude Include="..\include\trng_lib.h" />
     <ClInclude Include="..\include\user_lib.h" />
+    <ClInclude Include="TheataOptions.h" />
     <ClInclude Include="TranformationMatrix.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Vector.h" />

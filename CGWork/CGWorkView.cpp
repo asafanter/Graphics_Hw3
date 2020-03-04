@@ -159,6 +159,9 @@ BEGIN_MESSAGE_MAP(CCGWorkView, CView)
 		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_STRETCH, &CCGWorkView::OnUpdateBackgroundtypeStretch)
 		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_REPEAT, &CCGWorkView::OnUpdateBackgroundtypeRepeat)
 		ON_UPDATE_COMMAND_UI(ID_BACKGROUNDTYPE_NOBACKGROUND, &CCGWorkView::OnUpdateBackgroundtypeNobackground)
+		ON_COMMAND(ID_OPTIONS_SPOTLIGHTANGLE, &CCGWorkView::OnOptionsSpotlightangle)
+		ON_COMMAND(ID_OPTIONS_FOG, &CCGWorkView::OnOptionsFog)
+		ON_COMMAND(ID_OPTIONS_PHONGSHADING, &CCGWorkView::OnOptionsPhongshading)
 		END_MESSAGE_MAP()
 
 
@@ -1342,4 +1345,35 @@ void CCGWorkView::OnUpdateBackgroundtypeRepeat(CCmdUI *pCmdUI)
 void CCGWorkView::OnUpdateBackgroundtypeNobackground(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(scene.getBackgroundImageType() == ZBuffer::BackgroundImageType::NONE);
+}
+
+
+void CCGWorkView::OnOptionsSpotlightangle()
+{
+	TheataOptions dialog;
+	if (dialog.DoModal() == IDOK)
+	{
+		auto theta = dialog.getTheta();
+	}
+}
+
+
+void CCGWorkView::OnOptionsFog()
+{
+	FogDialog dialog;
+	if (dialog.DoModal() == IDOK)
+	{
+		auto min = dialog.getMin();
+		auto max = dialog.getMax();
+	}
+}
+
+
+void CCGWorkView::OnOptionsPhongshading()
+{
+	PhongDialog dialog;
+	if (dialog.DoModal() == IDOK)
+	{
+		auto factor = dialog.getFactor();
+	}
 }

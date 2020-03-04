@@ -119,7 +119,6 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 		zbuffer.setBackgroundImage(_background_image_file_name.c_str(), _background_image_type);
 	}
 	
-
 	if (!_is_initialized)
 	{
 		_is_initialized = true;
@@ -133,7 +132,7 @@ void Scene::saveHistory()
 
 void Scene::updateHistory(const ZBuffer &zbuffer)
 {
-	float factor = 0.98;
+	float factor = 0.97;
 
 	int *bits = zbuffer.getBits();
 	for (int i = 0; i < zbuffer.getWidth() * zbuffer.getHeight(); i++)

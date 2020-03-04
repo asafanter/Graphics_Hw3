@@ -20,6 +20,9 @@
 #include "PolygonDialog.h"
 #include "ActiveMeshDialog.h"
 #include "Types.h"
+#include "TheataOptions.h"
+#include "FogDialog.h"
+#include "PhongDialog.h"
 
 class CCGWorkView : public CView
 {
@@ -225,6 +228,9 @@ public:
 	afx_msg void OnUpdateBackgroundtypeStretch(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBackgroundtypeRepeat(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBackgroundtypeNobackground(CCmdUI *pCmdUI);
+	afx_msg void OnOptionsSpotlightangle();
+	afx_msg void OnOptionsFog();
+	afx_msg void OnOptionsPhongshading();
 };
 
 #ifndef _DEBUG  // debug version in CGWorkView.cpp

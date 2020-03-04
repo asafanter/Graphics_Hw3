@@ -14,6 +14,8 @@
 #define IDD_DIALOG4                     145
 #define IDD_DIALOG5                     150
 #define IDD_FORMVIEW1                   151
+#define IDD_DIALOG6                     152
+#define IDD_DIALOG7                     154
 #define IDC_LIGHT_SPACE                 1010
 #define IDC_RADIO_LIGHT1                1017
 #define IDC_RADIO_LIGHT2                1018
@@ -114,13 +116,16 @@
 #define ID_BACKGROUNDTYPE_NOBACKGROUND  32850
 #define ID_BACKGROUNDTYPE_STRETCH       32851
 #define ID_BACKGROUNDTYPE_REPEAT        32852
+#define ID_OPTIONS_SPOTLIGHTANGLE       32853
+#define ID_OPTIONS_FOG                  32854
+#define ID_OPTIONS_PHONGSHADING         32855
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        152
-#define _APS_NEXT_COMMAND_VALUE         32853
+#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_COMMAND_VALUE         32856
 #define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
