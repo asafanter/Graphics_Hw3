@@ -68,6 +68,10 @@ public:
 	void setBackgroundImage(const std::string &file_name);
 	void setBackgroundImageType(const ZBuffer::BackgroundImageType &type) { _background_image_type = type; }
 	ZBuffer::BackgroundImageType getBackgroundImageType() const { return _background_image_type; }
+	void setSpotLightTheta(const double &theta) { _spot_light_theta = theta; }
+	void setMinFog(const double &val) { _min_fog = val; }
+	void setMaxFog(const double &val) { _max_fog = val; }
+	void setPhongFactor(const int &val) { _phong_factor = val; }
 
 	Scene& setWireFrameColor(const COLORREF &color, int Id);
 	Scene& setFaceNormalsColor(const COLORREF &color, int Id);
@@ -110,6 +114,10 @@ private:
 	bool _need_save_history;
 	ZBuffer::BackgroundImageType _background_image_type;
 	std::string _background_image_file_name;
+	double _spot_light_theta;
+	double _min_fog;
+	double _max_fog;
+	int _phong_factor;
 
 };
 

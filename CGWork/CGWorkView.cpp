@@ -1354,6 +1354,7 @@ void CCGWorkView::OnOptionsSpotlightangle()
 	if (dialog.DoModal() == IDOK)
 	{
 		auto theta = dialog.getTheta();
+		scene.setSpotLightTheta(theta);
 	}
 }
 
@@ -1365,6 +1366,8 @@ void CCGWorkView::OnOptionsFog()
 	{
 		auto min = dialog.getMin();
 		auto max = dialog.getMax();
+		scene.setMinFog(min);
+		scene.setMaxFog(max);
 	}
 }
 
@@ -1375,5 +1378,6 @@ void CCGWorkView::OnOptionsPhongshading()
 	if (dialog.DoModal() == IDOK)
 	{
 		auto factor = dialog.getFactor();
+		scene.setPhongFactor(factor);
 	}
 }

@@ -23,7 +23,11 @@ ZBuffer::ZBuffer() :
 	_png(),
 	_is_foggy(false),
 	_fog_color({ 127, 127, 127 }),
-	_has_background_image(false)
+	_has_background_image(false),
+	_spot_light_theta(7.0),
+	_min_fog(1.0),
+	_max_fog(1.0),
+	_phong_factor(1)
 {
 	setDefaultColor(RGB(0, 0, 0));
 }
@@ -44,7 +48,12 @@ ZBuffer::ZBuffer(const uint &width, const uint &height, const Color &color) :
 	_curr_polygon_pos({}),
 	_png(),
 	_is_foggy(false),
-	_fog_color({ 127, 127, 127 })
+	_fog_color({ 127, 127, 127 }),
+	_has_background_image(false),
+	_spot_light_theta(7.0),
+	_min_fog(1.0),
+	_max_fog(1.0),
+	_phong_factor(1)
 {
 	_z.resize(width * height);
 	_drawn.resize(width * height);
@@ -247,8 +256,8 @@ double ZBuffer::calcDepthInFog(const double &depth)
 		return 0.0;
 	}
 
-	double fog_start = 1.0;
-	double fog_end = 0.7;
+	double fog_start = _min_fog;
+	double fog_end = _max_fog;
 	double res = (depth - fog_start) / (fog_end - fog_start);
 
 	if (res < 0.0)
@@ -304,7 +313,7 @@ Vec3 ZBuffer::calcSpotLight(const Vec3 &pos)
 			light_dir.normalize();
 
 			Vec3 light_pos = { light.posX, light.posY, light.posZ };
-			auto angle = 10.0 * consts::PI / 180.0;
+			auto angle = _spot_light_theta * consts::PI / 180.0;
 
 			auto res = acos(light_dir.dot((pos - light_pos).normalize()));
 
@@ -399,7 +408,7 @@ Vec3 ZBuffer::calcSpecular(const Vec3 &pos, const Vec3 &normal)
 
 				Vec3 Ks = base_color.elementMultiply(specular) / 255.0;
 
-				res = res + Ks * _Is * std::pow(cos_theta, 100);
+				res = res + Ks * _Is * std::pow(cos_theta, _phong_factor);
 			}
 		}
 

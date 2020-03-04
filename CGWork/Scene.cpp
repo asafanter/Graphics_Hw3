@@ -24,7 +24,11 @@ Scene::Scene() :
 	_is_recording_history(false),
 	_need_save_history(false),
 	_background_image_type(ZBuffer::BackgroundImageType::NONE),
-	_background_image_file_name()
+	_background_image_file_name(),
+	_spot_light_theta(7.0),
+	_min_fog(1.0),
+	_max_fog(1.0),
+	_phong_factor(1)
 {
 	_projection = TransformationMatrix<double>::ortho(-10.0, 10.0, -5.0, 5.0, -5.0, 5.0);
 	_camera.pos = Vec3d(0.0, 0.0, 3.0);
@@ -89,6 +93,10 @@ void Scene::draw(ZBuffer &zbuffer, bool showFaceNormals, bool showVerNormals,
 	zbuffer.setAmbient(_ambient);
 	zbuffer.setEnableFog(_is_foggy);
 	zbuffer.setFogColor(_fog_color);
+	zbuffer.setSpotLightTheta(_spot_light_theta);
+	zbuffer.setMinFog(_min_fog);
+	zbuffer.setMaxFog(_max_fog);
+	zbuffer.setPhongFactor(_phong_factor);
 
 	for (auto &obj : _objs) {
 

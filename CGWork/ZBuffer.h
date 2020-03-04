@@ -77,6 +77,10 @@ public: //methods
 	Vec3 calcFilterColor(const int &row, const int &col, const std::vector<int> &kernel);
 	void repeatImage(const int &w, const int &h);
 	void stretchImage(const int &w, const int &h);
+	void setSpotLightTheta(const double &theta) { _spot_light_theta = theta; }
+	void setMinFog(const double &val) { _min_fog = val; }
+	void setMaxFog(const double &val) { _max_fog = val; }
+	void setPhongFactor(const int &val) { _phong_factor = val; }
 
 private: //members
 	int *_bits;
@@ -99,5 +103,9 @@ private: //members
 	bool _is_foggy;
 	Vec3 _fog_color;
 	bool _has_background_image;
+	double _spot_light_theta;
+	double _min_fog;
+	double _max_fog;
+	int _phong_factor;
 };
 
